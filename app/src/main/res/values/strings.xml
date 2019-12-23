@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">MovieDbApp</string>
+    <string name="no_network">Check your internet and try again</string>
+    <string name="filter">Filter</string>
+    <string name="overview">Overview</string>
+    <string name="title_genres">Genres</string>
+    <string name="title_browse_movies">Browse Movies</string>
+    <string name="search">Search</string>
+    <string name="no_results_ror_search">No results for search</string>
+
+</resources>

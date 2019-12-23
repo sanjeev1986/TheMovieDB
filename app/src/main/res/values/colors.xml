@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#262626</color>
+    <color name="colorPrimaryDark">#202020</color>
+    <color name="colorAccent">#1BD9FF</color>
+    <color name="windowBackground">#333333</color>
+    <color name="white">#FFFFFF</color>
+    <color name="action">#C62828</color>
+    <color name="genre_selected">#AAAAAA</color>
+    <color name="adventure">#AD1457</color>
+    <color name="animation">#6A1B9A</color>
+    <color name="comedy">#4527A0</color>
+    <color name="crime">#283593</color>
+    <color name="documentary">#1565C0</color>
+    <color name="drama">#0277BD</color>
+    <color name="family">#00838F</color>
+    <color name="fantasy">#00695C</color>
+    <color name="history">#2E7D32</color>
+    <color name="horror">#558B2F</color>
+    <color name="music">#9E9D24</color>
+    <color name="mystery">#F9A825</color>
+    <color name="romance">#FF8F00</color>
+    <color name="sciencefiction">#EF6C00</color>
+    <color name="thriller">#4E342E</color>
+    <color name="tvmovie">#D84315</color>
+    <color name="war">#424242</color>
+    <color name="western">#37474F</color>
+    <color name="black">#000000</color>
+    <color name="bg_signin_in">#ffcd38</color>
+</resources>

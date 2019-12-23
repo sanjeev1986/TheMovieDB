@@ -1,0 +1,53 @@
+/** Packages Structure **/
+
+Packages are organised based on features
+
+common - Base classes which have to be inherited
+utils - UI Extensions, HttpStack
+browse - Browse movies in theatres and search
+details - Movie Details Feature
+platform - Android Platform API abstraction
+storage - Disk(not used)/SharedPreferences(not used)/DB(not used)/InMemoryCache(not used)
+
+/** Libraries **/
+1. Rxjava2
+2. Mockk
+3. Glide
+4. Timber
+4. Rest are all Androidx
+
+
+/** Behaviour **/
+
+1. Browse screen opens with movies in theatres and has pagination
+2. Search waits for a debounce time of 800 milli sec and has pagination
+3. Clicking on an item opens the details screen displaying the backdrop and overview
+4. Contents can be refreshed by a swipe down.
+5. App works from lollipop and above
+6. Supports landscape orientation but UX isn't designed for it.
+
+
+/** Performance **/
+
+1. Pagination scroll is smooth
+2. Tested with StrictMode
+
+
+/** Resilience **/
+
+1. App works on Portrait and Landscape(no leaks/crashes). All thou, the UX is not exactly designed for landscape,hence disabled.
+2. App handles network errors with a message
+3. App handles background kill by system and fully recovers when moved to foreground from task manager
+   use - (adb shell am kill com.sample.themoviedb)
+4. App is tested crashes
+5. The location for movies in theatres is determiened by the Locale.default().
+I havent used FusedLocationClient and location permission for simplifying the use case.
+
+/** Unit Testing **/
+
+1. Since the assesment didn't mention anything on unit tests, i have just unit tested the SearchDataSource for demonstrations
+
+/** UI Test **/
+
+1. App is coded in a UI testable way. Injection is to be done in the AppViewModerFactory's setTestInstance
+

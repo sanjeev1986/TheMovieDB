@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="id_action">28</integer>
+    <integer name="id_adventure">12</integer>
+    <integer name="id_animation">16</integer>
+    <integer name="id_comedy">35</integer>
+    <integer name="id_crime">80</integer>
+    <integer name="id_documentary">99</integer>
+    <integer name="id_drama">18</integer>
+    <integer name="id_family">10751</integer>
+    <integer name="id_fantasy">14</integer>
+    <integer name="id_history">36</integer>
+    <integer name="id_horror">27</integer>
+    <integer name="id_music">10402</integer>
+    <integer name="id_mystery">9648</integer>
+    <integer name="id_romance">10749</integer>
+    <integer name="id_sciencefiction">878</integer>
+    <integer name="id_tvmovie">10770</integer>
+    <integer name="id_thriller">53</integer>
+    <integer name="id_war">10752</integer>
+    <integer name="id_western">37</integer>
+
+
+    <string name="title_action">ACTION</string>
+    <string name="title_adventure">ADVENTURE</string>
+    <string name="title_animation">ANIMATION</string>
+    <string name="title_comedy">COMEDY</string>
+    <string name="title_crime">CRIME</string>
+    <string name="title_documentary">DOCUMENTARY</string>
+    <string name="title_drama">DRAMA</string>
+    <string name="title_family">FAMILY</string>
+    <string name="title_fantasy">FANTASY</string>
+    <string name="title_history">HISTORY</string>
+    <string name="title_horror">HORROR</string>
+    <string name="title_music">MUSIC</string>
+    <string name="title_mystery">MYSTERY</string>
+    <string name="title_romance">ROMANCE</string>
+    <string name="title_sciencefiction">SCIENCE FICTION</string>
+    <string name="title_tvmovie">TV MOVIE</string>
+    <string name="title_thriller">THRILLER</string>
+    <string name="title_war">WAR</string>
+    <string name="title_western">WESTERN</string>
+
+
+
+
+
+
+
+
+</resources>
