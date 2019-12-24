@@ -8,6 +8,7 @@ apply plugin: 'kotlin-kapt'
 
 def localProperties = new Properties()
 localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+def apiKey = localProperties['MOVIEDB_API_KEY']
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -22,12 +23,12 @@ android {
 
         debug {
             minifyEnabled false
-            buildConfigField 'String', 'apiKey', localProperties['MOVIEDB_API_KEY']
+            buildConfigField 'String', 'apiKey', "\"$apiKey\""
             buildConfigField 'String', 'BASE_URL', "\"https://api.themoviedb.org/3/\""
         }
         release {
             shrinkResources true
-            buildConfigField 'String', 'apiKey', localProperties['MOVIEDB_API_KEY']
+            buildConfigField 'String', 'apiKey', "\"$apiKey\""
             buildConfigField 'String', 'BASE_URL', "\"https://api.themoviedb.org/3/\""
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro','retrofit-rules.pro','glide-rules.pro'
@@ -64,6 +65,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
     implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     //Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
