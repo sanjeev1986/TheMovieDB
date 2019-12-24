@@ -5,7 +5,8 @@
     <color name="colorAccent">#1BD9FF</color>
     <color name="windowBackground">#333333</color>
     <color name="white">#FFFFFF</color>
-    <color name="action">#C62828</color>
+    <color name="progress">#37474F</color>
+    <!--<color name="action">#C62828</color>
     <color name="genre_selected">#AAAAAA</color>
     <color name="adventure">#AD1457</color>
     <color name="animation">#6A1B9A</color>
@@ -26,5 +27,5 @@
     <color name="war">#424242</color>
     <color name="western">#37474F</color>
     <color name="black">#000000</color>
-    <color name="bg_signin_in">#ffcd38</color>
+    <color name="bg_signin_in">#ffcd38</color>-->
 </resources>

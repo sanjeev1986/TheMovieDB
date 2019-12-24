@@ -65,12 +65,4 @@ class HttpStack(
                 .observeOn(AndroidSchedulers.mainThread())
         }
     }
-
-    fun <T> dispatchPeriodicSync(retrofitSingle: Single<T>) {
-
-    }
-
-    fun <T> dispatchPrefetch(retrofitSingle: Single<T>) {
-
-    }
 }

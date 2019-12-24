@@ -13,7 +13,9 @@ jobs:
       #      - run:
       #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
       #         command: sudo chmod +x ./gradlew
-      - run: echo "MOVIEDB_API_KEY=$MOVIEDB_API_KEY" >> ~/code/local.properties
+      - run:
+            name: Setup Credentials
+            command: echo "MOVIEDB_API_KEY=$MOVIEDB_API_KEY" >> ~/code/local.properties
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies

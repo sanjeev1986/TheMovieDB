@@ -13,6 +13,7 @@ import com.sample.themoviedb.storage.StorageManager
 /**
  * View model Abstract factory
  */
+@Suppress("UNCHECKED_CAST")
 class AppViewModerFactory(
     private val application: Application
     ,

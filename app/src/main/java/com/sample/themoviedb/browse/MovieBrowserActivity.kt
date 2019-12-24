@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedListAdapter
@@ -158,9 +159,9 @@ class MovieBrowserActivity : BaseActivity(), SearchView.OnQueryTextListener {
 
         })
         discoverParentLayout.apply {
-            setProgressBackgroundColorSchemeColor(resources.getColor(R.color.white))
-            setColorSchemeColors(resources.getColor(R.color.colorAccent))
-            setProgressBackgroundColorSchemeColor(resources.getColor(R.color.western))
+            setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context, R.color.white))
+            setColorSchemeColors(ContextCompat.getColor(context, R.color.colorAccent))
+            setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context, R.color.progress))
             setOnRefreshListener {
                 inTheatresViewModel.refresh()
             }
