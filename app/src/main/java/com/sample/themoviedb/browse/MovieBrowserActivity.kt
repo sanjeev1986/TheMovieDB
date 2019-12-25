@@ -15,16 +15,16 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.api.moviedb.Movie
 import com.sample.themoviedb.TheMovieDbApp
 import com.sample.themoviedb.R
-import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.browse.intheatres.InTheatresViewModel
 import com.sample.themoviedb.browse.search.SearchViewModel
 import com.sample.themoviedb.common.BaseActivity
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.details.MoviewDetailsActivity
-import com.sample.themoviedb.utils.ui.loadImage
 import com.google.android.material.snackbar.Snackbar
+import com.sample.themoviedb.utils.ui.loadImage
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 

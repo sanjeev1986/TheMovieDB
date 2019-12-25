@@ -1,4 +1,4 @@
-package com.sample.themoviedb.api
+package com.api.moviedb
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

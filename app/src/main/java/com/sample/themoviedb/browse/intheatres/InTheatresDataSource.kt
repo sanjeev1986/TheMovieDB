@@ -2,8 +2,8 @@ package com.sample.themoviedb.browse.intheatres
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
-import com.sample.themoviedb.api.Movie
-import com.sample.themoviedb.api.movies.MovieApi
+import com.api.moviedb.Movie
+import com.api.moviedb.movies.MovieApi
 import io.reactivex.disposables.CompositeDisposable
 
 /**
