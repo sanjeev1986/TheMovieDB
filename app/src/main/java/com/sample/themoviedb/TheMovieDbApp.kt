@@ -6,9 +6,9 @@ import android.os.StrictMode
 import android.os.StrictMode.VmPolicy
 import com.sample.themoviedb.api.ApiManager
 import com.sample.themoviedb.common.AppViewModerFactory
-import com.sample.themoviedb.platform.PlatformManager
-import com.sample.themoviedb.storage.StorageManager
 import com.sample.themoviedb.utils.network.HttpStack
+import com.sanj.appstarterpack.platform.PlatformManager
+import com.sanj.appstarterpack.storage.StorageManager
 import timber.log.Timber
 
 /**

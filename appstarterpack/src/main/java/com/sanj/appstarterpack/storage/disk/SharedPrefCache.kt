@@ -1,4 +1,4 @@
-package com.sample.themoviedb.storage.disk
+package com.sanj.appstarterpack.storage.disk
 
 import android.app.Application
 import android.preference.PreferenceManager

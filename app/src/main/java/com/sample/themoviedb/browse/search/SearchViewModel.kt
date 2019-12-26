@@ -6,7 +6,6 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.api.search.SearchApi
-import com.sample.themoviedb.browse.intheatres.SearchDSFactory
 import com.sample.themoviedb.common.BaseViewModel
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.MainThreadExecutor

@@ -6,9 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.sample.themoviedb.api.ApiManager
 import com.sample.themoviedb.browse.intheatres.InTheatresViewModel
 import com.sample.themoviedb.browse.search.SearchViewModel
-//import com.sample.themoviedb.details.MovieDetailsViewModel
-import com.sample.themoviedb.platform.PlatformManager
-import com.sample.themoviedb.storage.StorageManager
+import com.sanj.appstarterpack.platform.PlatformManager
+import com.sanj.appstarterpack.storage.StorageManager
 
 /**
  * View model Abstract factory

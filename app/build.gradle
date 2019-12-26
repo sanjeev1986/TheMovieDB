@@ -90,4 +90,5 @@ dependencies {
     testImplementation "androidx.arch.core:core-testing:2.1.0"
     implementation 'androidx.paging:paging-common:2.1.1'
     implementation 'androidx.paging:paging-runtime:2.1.1'
+    implementation project(path: ':appstarterpack')
 }

@@ -1,4 +1,4 @@
-package com.sample.themoviedb.browse.intheatres
+package com.sample.themoviedb.browse.search
 
 import androidx.paging.DataSource
 import com.sample.themoviedb.api.Movie

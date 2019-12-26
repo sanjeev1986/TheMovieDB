@@ -1,4 +1,4 @@
-package com.sample.themoviedb.storage.disk
+package com.sanj.appstarterpack.storage.disk
 
 /**
  * Rx abstracted File IO. Not implemented.

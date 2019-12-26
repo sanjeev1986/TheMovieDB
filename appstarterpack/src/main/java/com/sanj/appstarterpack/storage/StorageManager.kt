@@ -1,10 +1,10 @@
-package com.sample.themoviedb.storage
+package com.sanj.appstarterpack.storage
 
 import android.app.Application
 import android.content.ComponentCallbacks2
 import android.content.res.Configuration
-import com.sample.themoviedb.storage.disk.SharedPrefCache
-import com.sample.themoviedb.storage.memory.InMemoryCache
+import com.sanj.appstarterpack.storage.disk.SharedPrefCache
+import com.sanj.appstarterpack.storage.memory.InMemoryCache
 
 class StorageManager(private val application: Application) : ComponentCallbacks2 {
 

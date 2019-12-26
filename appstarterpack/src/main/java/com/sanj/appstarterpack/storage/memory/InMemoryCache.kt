@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.sample.themoviedb.storage.memory
+package com.sanj.appstarterpack.storage.memory
 
 import android.util.LruCache
 import io.reactivex.Maybe

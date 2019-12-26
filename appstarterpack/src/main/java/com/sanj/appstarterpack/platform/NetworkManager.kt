@@ -1,4 +1,4 @@
-package com.sample.themoviedb.platform
+package com.sanj.appstarterpack.platform
 
 import android.app.Application
 import android.content.Context
