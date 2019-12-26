@@ -1,6 +1,30 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+ext {
+    bintrayRepo = 'appstarterpack'
+    bintrayName = 'com.sanj.appstarterpack'
+    libraryName = 'appstarterpack'
+
+    publishedGroupId = 'com.sanj.appstarterpack'
+    artifact = 'appstarterpack'
+    libraryDescription = 'A custom Drawable to use as background which embody "transparent", AKA checkerboard grid.'
+    libraryVersion = '1.0.0'
+
+    gitUrl = 'https://github.com/sanjeev1986/TheMovieDB.git'
+    siteUrl = 'https://github.com/sanjeev1986/TheMovieDB'
+
+    developerId = 'sanjeevsbr'
+    developerName = 'Sanjeev S'
+    developerEmail = 'sanjeev.sbr@gmail.com'
+    licenseName = 'Apache License 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
 android {
     compileSdkVersion 29
 
@@ -38,4 +62,8 @@ dependencies {
     api 'io.reactivex.rxjava2:rxjava:2.2.8'
     api 'com.squareup.retrofit2:converter-scalars:2.1.0'
     api 'com.squareup.retrofit2:converter-gson:2.5.0'
+}
+if (project.rootProject.file('local.properties').exists()) {
+    apply from: 'https://raw.githubusercontent.com/wajahatkarim3/JCenter-Gradle-Scripts/master/install.gradle'
+    apply from: 'https://raw.githubusercontent.com/wajahatkarim3/JCenter-Gradle-Scripts/master/bintray.gradle'
 }
