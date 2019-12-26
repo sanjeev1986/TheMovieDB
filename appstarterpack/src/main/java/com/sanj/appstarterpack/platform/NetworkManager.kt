@@ -1,5 +1,6 @@
 package com.sanj.appstarterpack.platform
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 
@@ -16,6 +17,7 @@ class NetworkManager(private val application: Application) {
     /**
      * Return current network status
      */
+    @SuppressLint("MissingPermission")
     fun getNetworkStatus(): Single<NetworkStatus> {
         return connectivityManager.activeNetworkInfo?.let {
             if (connectivityManager.activeNetworkInfo.isConnected) {
