@@ -1,8 +1,8 @@
 package com.sample.themoviedb.browse.intheatres
 
 import androidx.paging.PageKeyedDataSource
-import com.api.moviedb.Movie
-import com.api.moviedb.search.SearchApi
+import com.sample.themoviedb.api.Movie
+import com.sample.themoviedb.api.search.SearchApi
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 

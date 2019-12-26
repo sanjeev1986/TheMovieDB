@@ -1,7 +1,7 @@
-package com.api.moviedb.movies
+package com.sample.themoviedb.api.movies
 
 
-import com.api.moviedb.utils.network.HttpStack
+import com.sample.themoviedb.utils.network.HttpStack
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query

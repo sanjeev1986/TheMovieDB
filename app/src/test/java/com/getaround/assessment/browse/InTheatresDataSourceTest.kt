@@ -3,7 +3,7 @@ package com.sample.themoviedb.browse
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
-import com.api.moviedb.movies.MovieApi
+import com.sample.themoviedb.api.movies.MovieApi
 import com.sample.themoviedb.browse.intheatres.InTheatresDataSource
 import io.mockk.every
 import io.mockk.mockk

@@ -1,9 +1,8 @@
-package com.sample.themoviedb.browse.search
+package com.sample.themoviedb.browse.intheatres
 
 import androidx.paging.DataSource
-import com.api.moviedb.Movie
-import com.api.moviedb.search.SearchApi
-import com.sample.themoviedb.browse.intheatres.SearchDataSource
+import com.sample.themoviedb.api.Movie
+import com.sample.themoviedb.api.search.SearchApi
 import io.reactivex.disposables.CompositeDisposable
 
 /**

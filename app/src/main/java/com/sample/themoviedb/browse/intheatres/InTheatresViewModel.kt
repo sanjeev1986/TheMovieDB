@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.api.moviedb.Movie
-import com.api.moviedb.movies.MovieApi
+import com.sample.themoviedb.api.Movie
+import com.sample.themoviedb.api.movies.MovieApi
 import com.sample.themoviedb.common.BaseViewModel
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.MainThreadExecutor

@@ -1,1 +1,1 @@
-include ':app', ':moviedbapi'
+include ':app'

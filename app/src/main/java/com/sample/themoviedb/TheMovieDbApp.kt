@@ -4,11 +4,11 @@ import android.app.Application
 import android.content.Context
 import android.os.StrictMode
 import android.os.StrictMode.VmPolicy
-import com.api.moviedb.ApiManager
-import com.api.moviedb.utils.network.HttpStack
+import com.sample.themoviedb.api.ApiManager
 import com.sample.themoviedb.common.AppViewModerFactory
 import com.sample.themoviedb.platform.PlatformManager
 import com.sample.themoviedb.storage.StorageManager
+import com.sample.themoviedb.utils.network.HttpStack
 import timber.log.Timber
 
 /**
@@ -38,6 +38,15 @@ class TheMovieDbApp : Application() {
 
     }
 
+    /**
+     * Singleton HTTPStack instance
+     */
+    private val httpStack by lazy(LazyThreadSafetyMode.NONE) {
+        HttpStack(
+            BuildConfig.BASE_URL,
+            cacheDir
+        )
+    }
 
     /**
      * Singleton storage provider
@@ -47,11 +56,7 @@ class TheMovieDbApp : Application() {
     /**
      * Singleton API Manager
      */
-    val apiManager by lazy(LazyThreadSafetyMode.NONE) {
-        ApiManager(
-            this
-        )
-    }
+    val apiManager by lazy(LazyThreadSafetyMode.NONE) { ApiManager(httpStack) }
 
     /**
      * Singleton Viewmodel factory provider

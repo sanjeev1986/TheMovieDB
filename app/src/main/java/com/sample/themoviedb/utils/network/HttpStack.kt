@@ -1,6 +1,6 @@
-package com.api.moviedb.utils.network
+package com.sample.themoviedb.utils.network
 
-import com.api.moviedb.BuildConfig
+import com.sample.themoviedb.BuildConfig
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

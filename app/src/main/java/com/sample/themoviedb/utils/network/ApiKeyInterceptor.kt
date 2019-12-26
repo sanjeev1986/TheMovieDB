@@ -1,6 +1,6 @@
-package com.api.moviedb.utils.network
+package com.sample.themoviedb.utils.network
 
-import com.api.moviedb.BuildConfig
+import com.sample.themoviedb.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 
