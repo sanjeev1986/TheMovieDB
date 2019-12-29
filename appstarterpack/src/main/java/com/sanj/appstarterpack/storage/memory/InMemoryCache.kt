@@ -2,32 +2,50 @@
 
 package com.sanj.appstarterpack.storage.memory
 
+import android.content.ComponentCallbacks2
+import android.content.res.Configuration
 import android.util.LruCache
 import io.reactivex.Maybe
+//import kotlinx.coroutines.rx2.await
+//import kotlinx.coroutines.rx2.openSubscription
+import java.lang.Exception
 
-/**
- * In memory LRU cache used to store reusable data models.
- * Not used in the app. Was using this for faster data fetch i.e memory->network
- * Since Android Pagination has a cache of its own, This ended up being redundant
- */
-class InMemoryCache(size: Int = 1 * 1024 * 1024/* Default 1 MB cache*/) {
-    private val memoryCache = LruCache<String, Any>(size)
-    fun <T> getDataFromCache(key: String): Maybe<T> {
+class InMemoryCache(size: Int = 1 * 1024 * 1024/* Default 1 MB cache*/) : ComponentCallbacks2 {
+    override fun onLowMemory() {}
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {}
+
+    override fun onTrimMemory(level: Int) {
+        if (level == ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW) {
+            clearAll()
+        }
+    }
+
+    private val memoryCache = LruCache<Class<*>, Any>(size)
+
+
+    fun <T> get(key: Class<T>): Maybe<T> {
         val data = memoryCache[key]
         return if (data != null)
-            Maybe.just(data as T)
+            try {
+                val result: T = data as T
+                Maybe.just(result)
+            } catch (e: Exception) {
+                Maybe.error<T>(InvalidConversionOperation(e))
+            }
         else
             Maybe.empty()
     }
 
-    fun <T> saveToInMemoryCache(key: String, data: T): T {
+
+    fun <T> put(key: Class<T>, data: T): T {
         memoryCache.put(key, data)
         return data
     }
 
+    fun <T> remove(key: Class<T>) = memoryCache.remove(key) as T?
 
-    fun <T> removeFromCache(key: String) = memoryCache.remove(key)
+    fun clearAll() = memoryCache.evictAll()
 
-    fun clear() = memoryCache.evictAll()
-
+    class InvalidConversionOperation(throwable: Throwable) : Throwable(throwable)
 }

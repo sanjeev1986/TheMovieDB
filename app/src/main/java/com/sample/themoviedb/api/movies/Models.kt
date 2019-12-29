@@ -1,9 +1,12 @@
 package com.sample.themoviedb.api.movies
 
+import android.os.Parcelable
 import com.sample.themoviedb.api.Movie
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class NowInThreatresResponse(
     @SerializedName("results")
     @Expose
@@ -20,8 +23,9 @@ data class NowInThreatresResponse(
     @SerializedName("total_pages")
     @Expose
     var totalPages: Int = 0
-)
+):Parcelable
 
+@Parcelize
 data class Dates(
     @SerializedName("maximum")
     @Expose
@@ -29,4 +33,4 @@ data class Dates(
     @SerializedName("minimum")
     @Expose
     var minimum: String? = null
-)
+):Parcelable

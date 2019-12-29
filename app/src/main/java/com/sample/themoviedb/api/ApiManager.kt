@@ -18,6 +18,7 @@ class ApiManager(private val httpStack: HttpStack) : ComponentCallbacks2 {
 
     }
 
-    val movieApi by lazy(LazyThreadSafetyMode.NONE) { MovieApi(httpStack) }
-    val searchApi by lazy(LazyThreadSafetyMode.NONE) { SearchApi(httpStack) }
+    val movieApi by lazy(LazyThreadSafetyMode.NONE) { httpStack.retrofit.create(MovieApi::class.java) }
+
+    val searchApi by lazy(LazyThreadSafetyMode.NONE) { httpStack.retrofit.create(SearchApi::class.java) }
 }
