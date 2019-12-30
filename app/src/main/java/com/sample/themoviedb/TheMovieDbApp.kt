@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import android.os.StrictMode
 import android.os.StrictMode.VmPolicy
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.sample.themoviedb.api.ApiManager
 import com.sample.themoviedb.common.AppViewModerFactory
 import com.sample.themoviedb.utils.network.HttpStack
@@ -17,11 +19,12 @@ import timber.log.Timber
 class TheMovieDbApp : Application() {
     companion object {
         fun getInstance(context: Context): TheMovieDbApp = context.applicationContext as TheMovieDbApp
+        fun getInstance(activity: AppCompatActivity): TheMovieDbApp = activity.applicationContext as TheMovieDbApp
     }
 
     override fun onCreate() {
         if (BuildConfig.DEBUG) {//
-            StrictMode.setThreadPolicy(
+           /* StrictMode.setThreadPolicy(
                 StrictMode.ThreadPolicy.Builder()
                     .detectAll()
                     .penaltyLog()
@@ -31,7 +34,7 @@ class TheMovieDbApp : Application() {
                 VmPolicy.Builder()
                     .detectAll()
                     .build()
-            )
+            )*/
             Timber.plant(Timber.DebugTree())
         }
         super.onCreate()

@@ -29,18 +29,18 @@ class InTheatresDataSourceTest {
     @Before
     fun setup() {
         datasource =
-            InTheatresDataSource(region, api, disposables, errorLiveData)
+            InTheatresDataSource(region, null, api, disposables, errorLiveData)
     }
 
     @Test
     fun initialload_always_fetches_firstpage() {
         datasource.loadInitial(mockk(), mockk())
-        verify(exactly = 1) { api.getNowInThreatres(eq(1), eq("NL")) }
+        verify(exactly = 1) { api.fetchNowInTheatres(eq(1), eq("NL")) }
     }
 
     @Test
     fun initialload_error_handling() {
-        every { api.getNowInThreatres(eq(1), eq("NL")) } returns Single.error(IOException())
+        every { api.fetchNowInTheatres(eq(1), eq("NL")) } returns Single.error(IOException())
         datasource.loadInitial(mockk(), mockk())
         Assert.assertTrue(errorLiveData.value is IOException)
     }
@@ -49,6 +49,6 @@ class InTheatresDataSourceTest {
     fun loadafter_invokes_the_next_page() {
         val params = PageKeyedDataSource.LoadParams<Int>(1, 20)
         datasource.loadAfter(params, mockk())
-        verify(exactly = 1) { api.getNowInThreatres(eq(2), eq("NL")) }
+        verify(exactly = 1) { api.fetchNowInTheatres(eq(2), eq("NL")) }
     }
 }

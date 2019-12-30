@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.sample.themoviedb.api.Movie
+import com.sample.themoviedb.api.genres.Genre
 import com.sample.themoviedb.api.movies.MovieApi
 import com.sample.themoviedb.common.BaseViewModel
 import com.sample.themoviedb.common.ViewModelResult
@@ -20,7 +21,7 @@ class InTheatresViewModel(application: Application, movieApi: MovieApi) :
     BaseViewModel<PagedList<Movie>>(application) {
     private val _error = MutableLiveData<Throwable>()
 
-    val factory = InTheatresDSFactory(
+    private val factory = InTheatresDSFactory(
         Locale.getDefault().country,
         movieApi,
         disposables,
@@ -46,9 +47,10 @@ class InTheatresViewModel(application: Application, movieApi: MovieApi) :
         }
     }
 
-    fun refresh() {
-        _resultsLiveData.value = ViewModelResult.Progress
+    fun refresh(genres: Set<Genre>? = null) {
+        factory.genres = genres?.asSequence()?.map { it.id }?.joinToString(separator = "|")  ?: kotlin.run { null}
         factory.dataSource?.invalidate()
+        _resultsLiveData.value = ViewModelResult.Progress
     }
 
 }
