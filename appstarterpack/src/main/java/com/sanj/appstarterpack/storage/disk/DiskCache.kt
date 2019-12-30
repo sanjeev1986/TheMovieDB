@@ -10,8 +10,6 @@ import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
 import io.reactivex.Maybe
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import java.io.*
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
@@ -29,9 +27,10 @@ class DiskCache(private val context: Context) {
     ): Single<T> = Single.fromCallable {
         var bout: BufferedOutputStream? = null
         try {
-            val fileDir = File((if (isCachedir) context.cacheDir else context.filesDir), filename.name)
+            val fileDir =
+                File((if (isCachedir) context.cacheDir else context.filesDir), filename.simpleName)
             if (fileDir.exists()) {
-                context.deleteFile(filename.name)
+                context.deleteFile(filename.simpleName)
             }
             val str = gson.toJson(data)
             var fileout: OutputStream = FileOutputStream(fileDir)
@@ -49,9 +48,8 @@ class DiskCache(private val context: Context) {
             bout?.close()
         }
         return@fromCallable data
-    }.compose {
-        it.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
+
 
 
     fun <T : Parcelable> readFile(cls: Class<T>, isCachedir: Boolean = true): Maybe<T> {
@@ -61,7 +59,7 @@ class DiskCache(private val context: Context) {
             try {
                 val fileDir = File(
                     (if (isCachedir) context.cacheDir else context.filesDir),
-                    cls::class.java.name
+                    cls.simpleName
                 )
                 if (fileDir.exists()) {
                     var fin: InputStream = FileInputStream(fileDir)
@@ -69,32 +67,39 @@ class DiskCache(private val context: Context) {
                     bin = BufferedReader(InputStreamReader(fin))
                     val d = gson.fromJson(bin, cls)
                     bin.close()
-                    subscriber.onSuccess(d)
+                    if (!subscriber.isDisposed) {
+                        subscriber.onSuccess(d)
+                    }
+
                 }
-                subscriber.onComplete()
+                if (!subscriber.isDisposed) {
+                    subscriber.onComplete()
+                }
             } catch (e: JsonSyntaxException) {
-                subscriber.onError(InvalidJsonInput)
+                if (!subscriber.isDisposed) {
+                    subscriber.onError(InvalidJsonInput)
+                }
             } catch (e: JsonParseException) {
-                subscriber.onError(ParseFailure)
+                if (!subscriber.isDisposed) {
+                    subscriber.onError(ParseFailure)
+                }
             } catch (e: Exception) {
-                subscriber.onError(UnknownFileIOError(e))
+                if (!subscriber.isDisposed) {
+                    subscriber.onError(UnknownFileIOError(e))
+                }
             } finally {
                 bin?.close()
             }
-        }.compose {
-            it.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         }
     }
 
-    fun <T> deleteFile(filename: String, isCachedir: Boolean = true): Maybe<T> {
+    fun <T> deleteFile(filename: Class<T>, isCachedir: Boolean = true): Maybe<T> {
 
-        return Maybe.create<T> { subscriber ->
-            val file = File((if (isCachedir) context.cacheDir else context.filesDir), filename)
+        return Maybe.create<T> {
+            val file = File((if (isCachedir) context.cacheDir else context.filesDir), filename.simpleName)
             if (file.exists()) {
                 file.delete()
             }
-        }.compose {
-            it.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
         }
     }
 

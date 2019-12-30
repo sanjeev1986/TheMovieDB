@@ -6,6 +6,8 @@
     <color name="windowBackground">#333333</color>
     <color name="white">#FFFFFF</color>
     <color name="progress">#37474F</color>
+
+    <color name="genre_unselected">#37474F</color>
     <!--<color name="action">#C62828</color>
     <color name="genre_selected">#AAAAAA</color>
     <color name="adventure">#AD1457</color>

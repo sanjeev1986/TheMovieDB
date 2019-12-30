@@ -10,5 +10,5 @@ import retrofit2.http.Query
  */
 interface MovieApi {
     @GET("movie/now_playing")
-    fun fetchNowInTheatres(@Query("page") page: Int, @Query("region") region: String?): Single<NowInThreatresResponse>
+    fun fetchNowInTheatres(@Query("page") page: Int, @Query("region") region: String? = null, @Query("with_genres") genre: String? = null): Single<NowInThreatresResponse>
 }

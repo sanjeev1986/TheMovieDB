@@ -16,6 +16,9 @@ class InTheatresDSFactory(
     private val errorLiveData: MutableLiveData<Throwable>
 ) : DataSource.Factory<Int, Movie>() {
     var dataSource: InTheatresDataSource? = null
+    var genres: String? = null
     override fun create(): DataSource<Int, Movie> =
-        InTheatresDataSource(region, api, disposable, errorLiveData).also { dataSource = it }
+        InTheatresDataSource(region, genres, api, disposable, errorLiveData).also {
+            dataSource = it
+        }
 }

@@ -23,7 +23,7 @@ class SearchDataSource(
         val nextPage = currentPage + 1
         onProgress()
         disposable.add(
-            api.searchMovies(1, query)
+            api.searchMovieDb(1, query)
                 .subscribe({
                     callback.onResult(it.results ?: mutableListOf<Movie>(), currentPage, nextPage)
                 }, {
@@ -41,7 +41,7 @@ class SearchDataSource(
         val currentPage = params.key
         val nextPage = currentPage + 1
         disposable.add(
-            api.searchMovies(nextPage, query)
+            api.searchMovieDb(nextPage, query)
                 .subscribe({
                     callback.onResult(it.results ?: mutableListOf<Movie>(), nextPage)
                 }, {

@@ -2,29 +2,20 @@ package com.sample.themoviedb.browse
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
+import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.paging.PagedListAdapter
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.sample.themoviedb.TheMovieDbApp
 import com.sample.themoviedb.R
+import com.sample.themoviedb.TheMovieDbApp
 import com.sample.themoviedb.api.Movie
-import com.sample.themoviedb.browse.intheatres.InTheatresViewModel
+import com.sample.themoviedb.browse.intheatres.InTheatreFragment
 import com.sample.themoviedb.browse.search.SearchViewModel
 import com.sample.themoviedb.common.BaseActivity
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.details.MoviewDetailsActivity
-import com.sample.themoviedb.utils.ui.loadImage
-import com.google.android.material.snackbar.Snackbar
+import com.sample.themoviedb.genres.GenresFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
@@ -37,7 +28,6 @@ import timber.log.Timber
  * works with two way databinding( which is not demonstrated in this app thou)
  */
 class MovieBrowserActivity : BaseActivity(), SearchView.OnQueryTextListener {
-    private var isFirstLoad = true
 
     override fun onQueryTextSubmit(query: String?): Boolean = true
 
@@ -46,10 +36,8 @@ class MovieBrowserActivity : BaseActivity(), SearchView.OnQueryTextListener {
         newText?.trim()
             ?.let {
                 if (it.isEmpty()) {
-                    discoverParentLayout.isEnabled = true
-                    inTheatresViewModel.refresh()
+                    //inTheatresViewModel.refresh()
                 } else {
-                    discoverParentLayout.isEnabled = false
                     searchViewModel.search(it)
                 }
             }
@@ -67,12 +55,6 @@ class MovieBrowserActivity : BaseActivity(), SearchView.OnQueryTextListener {
     }
 
 
-    private val inTheatresViewModel by lazy {
-        ViewModelProviders.of(
-            this
-            , TheMovieDbApp.getInstance(this).appViewModerFactory.buildBrowseMoviesViewModelFactory()
-        ).get(InTheatresViewModel::class.java)
-    }
 
     private val searchViewModel by lazy {
         ViewModelProviders.of(
@@ -81,92 +63,28 @@ class MovieBrowserActivity : BaseActivity(), SearchView.OnQueryTextListener {
         ).get(SearchViewModel::class.java)
     }
 
-    val diffUtil: DiffUtil.ItemCallback<Movie> = object : DiffUtil.ItemCallback<Movie>() {
-        override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-            return oldItem == newItem
-        }
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         supportActionBar?.title = getString(R.string.title_browse_movies)
-
-        discoverParentLayout.isRefreshing = true
-
-        val movieAdapter = MovieListAdapter()
-        movieListView.apply {
-            adapter = movieAdapter
-            layoutManager = GridLayoutManager(context, 2)
-        }
+        supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(android.R.animator.fade_in,0, 0, android.R.animator.fade_out)
+            .replace(R.id.fragmentContainer,InTheatreFragment(), InTheatreFragment::class.java.simpleName)
+            .addToBackStack(MovieBrowserActivity::class.java.simpleName)
+            .commitAllowingStateLoss()
 
         searchViewModel.resultsLiveData.observe(this, Observer {
             Timber.d(it.toString())
             when (it) {
 
-                is ViewModelResult.Progress -> {
-                    discoverParentLayout.isRefreshing = true
-                }
-                is ViewModelResult.Success -> {
-                    if (savedInstanceState == null && isFirstLoad) {
-                        isFirstLoad = false
-                    }
-                    Timber.d("result = ${it.result.size}")
-
-                    movieAdapter.submitList(it.result)
-                    discoverParentLayout.isRefreshing = false
-                }
-                is ViewModelResult.Failure -> {
-                    discoverParentLayout.isRefreshing = false
-                    Snackbar.make(
-                        findViewById(android.R.id.content),
-                        getString(R.string.no_network),
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                }
+                is ViewModelResult.Progress -> {}
+                is ViewModelResult.Success -> {}
+                is ViewModelResult.Failure -> {}
             }
 
         })
-
-        inTheatresViewModel.resultsLiveData.observe(this, Observer {
-
-            when (it) {
-                is ViewModelResult.Progress -> {
-                    discoverParentLayout.isRefreshing = true
-                }
-                is ViewModelResult.Success -> {
-                    if (savedInstanceState == null && isFirstLoad) {
-                        isFirstLoad = false
-                    }
-                    movieAdapter.submitList(it.result)
-                    discoverParentLayout.isRefreshing = false
-                }
-                is ViewModelResult.Failure -> {
-                    discoverParentLayout.isRefreshing = false
-                    Snackbar.make(
-                        findViewById(android.R.id.content),
-                        getString(R.string.no_network),
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                }
-            }
-
-        })
-        discoverParentLayout.apply {
-            setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context, R.color.white))
-            setColorSchemeColors(ContextCompat.getColor(context, R.color.colorAccent))
-            setProgressBackgroundColorSchemeColor(ContextCompat.getColor(context, R.color.progress))
-            setOnRefreshListener {
-                inTheatresViewModel.refresh()
-            }
-        }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -176,34 +94,23 @@ class MovieBrowserActivity : BaseActivity(), SearchView.OnQueryTextListener {
     }
 
 
-    private inner class MovieListAdapter :
-        PagedListAdapter<Movie, MovieViewHolder>(diffUtil) {
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder =
-            MovieViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.item_discover, parent, false)
-            )
-
-        override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-            getItem(position)?.apply {
-                holder.bind(this)
-            }
-
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_filter) {
+            supportFragmentManager.beginTransaction()
+                .setCustomAnimations(android.R.animator.fade_in, 0, 0, android.R.animator.fade_out)
+                .replace(R.id.fragmentContainer, GenresFragment(), GenresFragment::class.java.simpleName)
+                .addToBackStack(MovieBrowserActivity::class.java.simpleName)
+                .commitAllowingStateLoss()
+            return true
         }
-
+        return super.onOptionsItemSelected(item)
     }
 
-    private inner class MovieViewHolder(private var view: View) :
-        RecyclerView.ViewHolder(view) {
-        private val movieImage = view.findViewById<ImageView>(R.id.movieImage)
-
-        fun bind(movie: Movie) {
-            with(movie) {
-                posterPath?.apply { movieImage.loadImage(this) }
-            }
-            view.setOnClickListener {
-                this@MovieBrowserActivity.onClick(movie)
-            }
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount == 1) {
+            finish()
+        } else {
+            super.onBackPressed()
         }
     }
 
