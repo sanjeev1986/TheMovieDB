@@ -9,7 +9,7 @@ import retrofit2.http.GET
 
 interface GenreApi {
     @GET("genre/movie/list")
-    fun fetchGenres(): Single<GenreResponse>
+    suspend fun fetchGenres(): GenreResponse
 }
 
 @Parcelize

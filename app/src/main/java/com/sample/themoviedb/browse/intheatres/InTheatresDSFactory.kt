@@ -5,6 +5,7 @@ import androidx.paging.DataSource
 import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.api.movies.MovieApi
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * Movie in theatres data source factory
@@ -12,13 +13,13 @@ import io.reactivex.disposables.CompositeDisposable
 class InTheatresDSFactory(
     private val region: String,
     private val api: MovieApi,
-    private val disposable: CompositeDisposable,
+    private val scope: CoroutineScope,
     private val errorLiveData: MutableLiveData<Throwable>
 ) : DataSource.Factory<Int, Movie>() {
     var dataSource: InTheatresDataSource? = null
     var genres: String? = null
     override fun create(): DataSource<Int, Movie> =
-        InTheatresDataSource(region, genres, api, disposable, errorLiveData).also {
+        InTheatresDataSource(region, genres, api, scope, errorLiveData).also {
             dataSource = it
         }
 }
