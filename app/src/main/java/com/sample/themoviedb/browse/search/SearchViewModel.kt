@@ -2,6 +2,7 @@ package com.sample.themoviedb.browse.search
 
 import android.app.Application
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.sample.themoviedb.api.Movie
@@ -9,15 +10,21 @@ import com.sample.themoviedb.api.search.SearchApi
 import com.sample.themoviedb.common.BaseViewModel
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.MainThreadExecutor
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel uses a debounce time of 1 second to buffer the rapid typing of the user.
- * This avvoids an api call for every new char entered by the user and conserves data usage
+ * This avoids an api call for every new char entered by the user and conserves data usage
  */
+@ExperimentalCoroutinesApi
 class SearchViewModel(application: Application, private val searchApi: SearchApi) :
     BaseViewModel<PagedList<Movie>>(application) {
     val config = PagedList.Config.Builder()
@@ -25,39 +32,46 @@ class SearchViewModel(application: Application, private val searchApi: SearchApi
         .setInitialLoadSizeHint(20)
         .setPageSize(20).build()
 
-    val executor = MainThreadExecutor()//Since we are using Rx Schdulers
+    val executor = MainThreadExecutor()
 
     var _search: LiveData<PagedList<Movie>>? = null
-    private val searchDeBouncer: PublishSubject<String?> by lazy(LazyThreadSafetyMode.NONE) {
-        val subject = PublishSubject.create<String>()
-        subject.debounce(800, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-            .distinctUntilChanged()
-            .subscribe({ query ->
-                Timber.d(query)
-                val factory = SearchDSFactory(
-                    query,
-                    searchApi,
-                    disposables,
-                    { error -> _resultsLiveData.value = ViewModelResult.Failure(error) },
-                    { _resultsLiveData.value = ViewModelResult.Progress }
-                )
-                _search?.run { _resultsLiveData.removeSource(this) }
-                _search =
-                    LivePagedListBuilder<Int, Movie>(factory, config)
-                        .setFetchExecutor(executor)
-                        .build().also {
-                            _resultsLiveData.addSource(it) {
-                                _resultsLiveData.value = ViewModelResult.Success(it)
+
+    private val factory = SearchDSFactory(
+        searchApi,
+        viewModelScope,
+        { error -> _resultsLiveData.value = ViewModelResult.Failure(error) },
+        { _resultsLiveData.value = ViewModelResult.Progress }
+    )
+
+    private val queryChannel = BroadcastChannel<String>(Channel.CONFLATED)
+
+    @UseExperimental(FlowPreview::class)
+    internal val queryFlow = queryChannel.apply {
+        viewModelScope.launch {
+            this@apply.asFlow()
+                .debounce(800)
+                .catch {
+                    it.printStackTrace()
+                }.collect { query ->
+                    factory.query = query
+                    factory.dataSource?.invalidate()
+                    _search?.run { _resultsLiveData.removeSource(this) }
+                    _search =
+                        LivePagedListBuilder<Int, Movie>(factory, config)
+                            .setFetchExecutor(executor)
+                            .build().also {
+                                _resultsLiveData.addSource(it) {
+                                    _resultsLiveData.value = ViewModelResult.Success(it)
+                                }
                             }
-                        }
-            }, {
-                it.printStackTrace()
-                _resultsLiveData.value = ViewModelResult.Failure(it)
-            })
-        subject
+                }
+        }
     }
 
     fun search(query: String) {
-        searchDeBouncer.onNext(query)
+        viewModelScope.launch {
+            queryChannel.offer(query)
+        }
+
     }
 }

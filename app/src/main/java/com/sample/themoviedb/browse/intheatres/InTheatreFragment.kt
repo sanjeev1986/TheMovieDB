@@ -83,11 +83,14 @@ class InTheatreFragment : Fragment() {
                 }
                 is ViewModelResult.Failure -> {
                     inThreatresParentView.isRefreshing = false
-                    Snackbar.make(
-                        view.findViewById(android.R.id.content),
-                        getString(R.string.no_network),
-                        Snackbar.LENGTH_LONG
-                    ).show()
+                    activity?.run {
+                        Snackbar.make(
+                            findViewById(android.R.id.content),
+                            getString(R.string.no_network),
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                    }
+
                 }
             }
 

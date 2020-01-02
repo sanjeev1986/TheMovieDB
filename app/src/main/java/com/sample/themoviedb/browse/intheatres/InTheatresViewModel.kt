@@ -2,6 +2,7 @@ package com.sample.themoviedb.browse.intheatres
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.sample.themoviedb.api.Movie
@@ -24,7 +25,7 @@ class InTheatresViewModel(application: Application, movieApi: MovieApi) :
     private val factory = InTheatresDSFactory(
         Locale.getDefault().country,
         movieApi,
-        disposables,
+        viewModelScope,
         _error
     )
     private val _movies by lazy {

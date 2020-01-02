@@ -1,7 +1,6 @@
 package com.sample.themoviedb.api.search
 
 
-import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -10,5 +9,5 @@ import retrofit2.http.Query
  */
 interface SearchApi {
     @GET("search/movie")
-    fun searchMovieDb(@Query("page") page: Int, @Query("query") query: String): Single<SearchResponse>
+    suspend fun searchMovieDb(@Query("page") page: Int, @Query("query") query: String): SearchResponse
 }

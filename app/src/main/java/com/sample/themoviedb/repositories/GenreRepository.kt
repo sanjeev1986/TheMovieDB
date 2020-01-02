@@ -4,10 +4,9 @@ import com.sample.themoviedb.api.genres.GenreApi
 import com.sample.themoviedb.api.genres.GenreResponse
 import com.sanj.appstarterpack.storage.disk.DiskCache
 import com.sanj.appstarterpack.storage.memory.InMemoryCache
-import io.reactivex.Maybe
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.rx2.await
+import kotlinx.coroutines.withContext
 
 class GenreRepository(
     private val inMemoryCache: InMemoryCache,
@@ -15,36 +14,34 @@ class GenreRepository(
     private val genreApi: GenreApi
 ) {
 
-    fun fetchGenres(refreshCache: Boolean = false): Single<GenreResponse> {
+    suspend fun fetchGenres(refreshCache: Boolean = false): GenreResponse {
         return if (refreshCache) {
-            genreApi.fetchGenres().flatMap {
-                inMemoryCache.put(GenreResponse::class.java, it)
-                diskCache.saveFile(GenreResponse::class.java, it)
-            }.compose {
-                it.subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-            }
-        } else {
-            inMemoryCache.get(GenreResponse::class.java)
-                .switchIfEmpty(Maybe.defer<GenreResponse> {
-                    Maybe.defer {
-                        diskCache.readFile(GenreResponse::class.java).compose {
-                            it.subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                        }.map { inMemoryCache.put(GenreResponse::class.java, it) }
+            withContext(Dispatchers.IO) {
+                try {
+                    genreApi.fetchGenres().apply {
+                        inMemoryCache.put(GenreResponse::class.java, this)
+                        diskCache.saveFile(GenreResponse::class.java, this).await()
                     }
-                }).switchIfEmpty(
-                    Single.defer {
-                        genreApi.fetchGenres()
-                            .flatMap {
-                                inMemoryCache.put(GenreResponse::class.java, it)
-                                diskCache.saveFile(GenreResponse::class.java, it)
-                            }.compose {
-                                it.subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    throw e
+                }
+            }
+
+        } else {
+            inMemoryCache.get(GenreResponse::class.java).await()
+                ?: return try {
+                    withContext(Dispatchers.IO) {
+                        diskCache.readFile(GenreResponse::class.java).await()
+                            ?: genreApi.fetchGenres().apply {
+                                inMemoryCache.put(GenreResponse::class.java, this)
+                                diskCache.saveFile(GenreResponse::class.java, this).await()
                             }
                     }
-                )
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                    throw e
+                }
         }
     }
 }
