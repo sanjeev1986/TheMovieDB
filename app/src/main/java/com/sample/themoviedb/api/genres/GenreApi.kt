@@ -13,22 +13,22 @@ interface GenreApi {
 }
 
 @Parcelize
-class Genre : Parcelable {
+data class Genre(
 
     @SerializedName("id")
     @Expose
-    var id: Int = 0
+    var id: Int = 0,
     @SerializedName("name")
     @Expose
     var name: String? = null
 
-}
+) : Parcelable
 
 @Parcelize
-class GenreResponse : Parcelable {
+class GenreResponse(
 
     @SerializedName("genres")
     @Expose
     var genres: List<Genre>? = null
 
-}
+) : Parcelable
