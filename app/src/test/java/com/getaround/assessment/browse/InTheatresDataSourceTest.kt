@@ -17,7 +17,7 @@ import org.junit.Test
 import java.io.IOException
 
 class InTheatresDataSourceTest {
-    @Rule
+    /*@Rule
     @JvmField
     val rule = InstantTaskExecutorRule()
     private val api = mockk<MovieApi>(relaxed = true)
@@ -50,5 +50,5 @@ class InTheatresDataSourceTest {
         val params = PageKeyedDataSource.LoadParams<Int>(1, 20)
         datasource.loadAfter(params, mockk())
         verify(exactly = 1) { api.fetchNowInTheatres(eq(2), eq("NL")) }
-    }
+    }*/
 }

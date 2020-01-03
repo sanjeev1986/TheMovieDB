@@ -101,18 +101,19 @@ class GenresFragment : Fragment() {
         }
 
         fun bind(genre: Genre) {
+            view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.genre_unselected))
             genretxtView.text = genre.name
             if (viewModel.selectedGenres.value?.contains(genre) == true) {
-                view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.colorAccent))
+                genretxtView.setTextColor(ContextCompat.getColor(view.context, R.color.colorAccent))
                 genretxtView.isChecked = true
             }
             view.setOnClickListener {
                 genretxtView.toggle()
                 if (genretxtView.isChecked) {
-                    view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.colorAccent))
+                    genretxtView.setTextColor(ContextCompat.getColor(view.context, R.color.colorAccent))
                     listOfSelectedGenres.add(genre)
                 } else {
-                    view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.genre_unselected))
+                    genretxtView.setTextColor(ContextCompat.getColor(view.context, R.color.white))
                     listOfSelectedGenres.remove(genre)
                 }
             }
