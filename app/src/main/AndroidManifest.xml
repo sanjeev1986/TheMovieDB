@@ -22,10 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.sample.themoviedb.details.MoviewDetailsActivity"
+        <activity android:name="com.sample.themoviedb.details.MovieDetailsActivity"
                   android:screenOrientation="portrait"
                   android:parentActivityName="com.sample.themoviedb.browse.MovieBrowserActivity"
-                  android:theme="@style/AppTheme"/>
+                  android:theme="@style/Theme.AppCompat.NoActionBar"/>
     </application>
 
 </manifest>

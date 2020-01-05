@@ -14,7 +14,7 @@ import com.sample.themoviedb.browse.intheatres.InTheatreFragment
 import com.sample.themoviedb.browse.search.SearchViewModel
 import com.sample.themoviedb.common.BaseActivity
 import com.sample.themoviedb.common.ViewModelResult
-import com.sample.themoviedb.details.MoviewDetailsActivity
+import com.sample.themoviedb.details.MovieDetailsActivity
 import com.sample.themoviedb.genres.GenresFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
@@ -45,12 +45,12 @@ class MovieBrowserActivity : BaseActivity(), SearchView.OnQueryTextListener {
     }
 
     fun onClick(movie: Movie) {
-        val intent = Intent(this, MoviewDetailsActivity::class.java)
-        intent.putExtra(MoviewDetailsActivity.EXTRA_ID, movie.id)
-        intent.putExtra(MoviewDetailsActivity.EXTRA_IMAGE_RES, movie.backdropPath)
-        intent.putExtra(MoviewDetailsActivity.EXTRA_IMAGE_THUMBNAIL, movie.posterPath)
-        intent.putExtra(MoviewDetailsActivity.EXTRA_TITLE, movie.title)
-        intent.putExtra(MoviewDetailsActivity.EXTRA_OVERVIEW, movie.overview)
+        val intent = Intent(this, MovieDetailsActivity::class.java)
+        intent.putExtra(MovieDetailsActivity.EXTRA_ID, movie.id)
+        intent.putExtra(MovieDetailsActivity.EXTRA_IMAGE_RES, movie.backdropPath)
+        intent.putExtra(MovieDetailsActivity.EXTRA_IMAGE_THUMBNAIL, movie.posterPath)
+        intent.putExtra(MovieDetailsActivity.EXTRA_TITLE, movie.title)
+        intent.putExtra(MovieDetailsActivity.EXTRA_OVERVIEW, movie.overview)
         startActivity(intent)
     }
 
