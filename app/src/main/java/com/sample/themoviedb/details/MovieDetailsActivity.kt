@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.activity_movie_details.*
 /**
  * Displays Backdrop and Overview of the Image
  */
-class MoviewDetailsActivity : BaseActivity() {
+class MovieDetailsActivity : BaseActivity() {
     companion object {
         /**
          * Movie Title
@@ -59,11 +59,17 @@ class MoviewDetailsActivity : BaseActivity() {
         }
 
         setSupportActionBar(toolbarDetails)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.apply {
+            title = null
+            setDisplayHomeAsUpEnabled(true)
+            setHomeButtonEnabled(true)
+        }
         movieImage?.run { backdropImgView.loadImage(this) } ?: run {
             backdropImgView.scaleType = ImageView.ScaleType.CENTER_INSIDE
             backdropImgView.setImageResource(R.drawable.ic_baseline_photo_24px)
+        }
+        movieThumbnail?.run {
+            findViewById<ImageView>(R.id.movieImage).loadImage(this)
         }
         titleTxtView.text = movieTitle
         overviewTxtView.text = movieOverview

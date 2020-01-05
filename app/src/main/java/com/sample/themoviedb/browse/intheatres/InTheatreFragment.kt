@@ -1,5 +1,6 @@
 package com.sample.themoviedb.browse.intheatres
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -21,9 +23,9 @@ import com.sample.themoviedb.R
 import com.sample.themoviedb.TheMovieDbApp
 import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.common.ViewModelResult
+import com.sample.themoviedb.details.MovieDetailsActivity
 import com.sample.themoviedb.genres.GenresViewModel
 import com.sample.themoviedb.utils.ui.loadImage
-import java.lang.IllegalStateException
 
 class InTheatreFragment : Fragment() {
 
@@ -32,7 +34,8 @@ class InTheatreFragment : Fragment() {
             ViewModelProviders.of(
                 this,
                 TheMovieDbApp.getInstance(this).appViewModerFactory.buildGenreViewModelFactory()
-            ).get(GenresViewModel::class.java)} ?: kotlin.run { throw IllegalStateException() }
+            ).get(GenresViewModel::class.java)
+        } ?: kotlin.run { throw IllegalStateException() }
     }
 
     private val inTheatresViewModel by lazy {
@@ -153,10 +156,23 @@ class InTheatreFragment : Fragment() {
                 posterPath?.apply { movieImage.loadImage(this) }
             }
             view.setOnClickListener {
-                this@InTheatreFragment.onClick(movie)
+                this@InTheatreFragment.onClick(movieImage, movie)
             }
         }
     }
 
-    fun onClick(movie: Movie) {}
+    fun onClick(movieImage: ImageView, movie: Movie) {
+        activity?.run {
+            val intent = Intent(activity, MovieDetailsActivity::class.java)
+            intent.putExtra(MovieDetailsActivity.EXTRA_ID, movie.id)
+            intent.putExtra(MovieDetailsActivity.EXTRA_IMAGE_RES, movie.backdropPath)
+            intent.putExtra(MovieDetailsActivity.EXTRA_IMAGE_THUMBNAIL, movie.posterPath)
+            intent.putExtra(MovieDetailsActivity.EXTRA_TITLE, movie.title)
+            intent.putExtra(MovieDetailsActivity.EXTRA_OVERVIEW, movie.overview)
+            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this, movieImage, movie.title ?: ""
+            )
+            startActivity(intent, options.toBundle())
+        }
+    }
 }
