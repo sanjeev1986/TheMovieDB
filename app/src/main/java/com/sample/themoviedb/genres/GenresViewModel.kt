@@ -22,7 +22,7 @@ class GenresViewModel(private val genreRepository: GenreRepository) : ViewModel(
     fun fetchGenres() {
         viewModelScope.launch {
             try {
-                _genresLiveData.value = genreRepository.fetchGenres().genres
+                _genresLiveData.value = genreRepository.fetchGenres()
             } catch (e: Exception) {
                 _genresLiveData.value = emptyList()
             }

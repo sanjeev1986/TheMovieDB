@@ -29,6 +29,6 @@ class GenreResponse(
 
     @SerializedName("genres")
     @Expose
-    var genres: List<Genre>? = null
+    var genres: List<Genre> = emptyList()
 
 ) : Parcelable

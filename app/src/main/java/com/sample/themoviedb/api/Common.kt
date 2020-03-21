@@ -51,4 +51,10 @@ data class Movie(
     @Expose
     var releaseDate: String? = null
 
-):Parcelable
+) : Parcelable
+
+
+interface UseCase<A, B> {
+    operator  fun invoke(a: A): B
+
+}

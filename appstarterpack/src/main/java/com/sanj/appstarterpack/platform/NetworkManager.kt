@@ -5,6 +5,8 @@ import android.app.Application
 import android.content.Context
 
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import io.reactivex.Single
 
 /**
@@ -19,24 +21,43 @@ class NetworkManager(private val application: Application) {
      */
     @SuppressLint("MissingPermission")
     fun getNetworkStatus(): Single<NetworkStatus> {
-        return connectivityManager.activeNetworkInfo?.let {
-            if (connectivityManager.activeNetworkInfo.isConnected) {
-                Single.just(
-                    NetworkStatus(
-                        it.isConnected,
-                        it.type
-                    )
+        return if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)?.let {
+                Single.just<NetworkStatus>(
+                    when {
+                        it.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> WIFI(
+                            connectivityManager.isActiveNetworkMetered
+                        )
+                        it.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> Mobile(
+                            connectivityManager.isActiveNetworkMetered
+                        )
+                        it.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> Ethernet(
+                            connectivityManager.isActiveNetworkMetered
+                        )
+                        else -> Disconnected
+                    }
                 )
-            } else {
-                Single.error(NoConnectivity)
-            }
+            } ?: Single.just<NetworkStatus>(Disconnected)
 
-        } ?: Single.error(NoConnectivity)
+        } else {
+            connectivityManager.activeNetworkInfo?.takeIf { it.isConnected }?.let {
+                Single.just<NetworkStatus>(
+                    when (it.type) {
+                        ConnectivityManager.TYPE_WIFI -> WIFI(connectivityManager.isActiveNetworkMetered)
+                        ConnectivityManager.TYPE_MOBILE -> Mobile(connectivityManager.isActiveNetworkMetered)
+                        ConnectivityManager.TYPE_ETHERNET -> Ethernet(connectivityManager.isActiveNetworkMetered)
+                        else -> Disconnected
+                    }
+                )
+            } ?: Single.just<NetworkStatus>(Disconnected)
+
+        }
     }
-
-
-
 }
 
-object NoConnectivity : Exception()
-data class NetworkStatus(val isConnected: Boolean, val networkType: Int)
+
+sealed class NetworkStatus
+data class WIFI(val isMetered: Boolean) : NetworkStatus()
+data class Mobile(val isMetered: Boolean) : NetworkStatus()
+data class Ethernet(val isMetered: Boolean) : NetworkStatus()
+object Disconnected : NetworkStatus()

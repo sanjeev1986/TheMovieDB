@@ -62,6 +62,7 @@ class AppViewModerFactory(
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return GenresViewModel(
                     GenreRepository(
+                        platformManager.networkManager,
                         storageManager.memoryCache,
                         storageManager.diskCache,
                         apiManager.genreApi
