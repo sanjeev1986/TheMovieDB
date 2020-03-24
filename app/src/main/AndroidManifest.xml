@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.sample.themoviedb">
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+        xmlns:tools="http://schemas.android.com/tools"
+        package="com.sample.themoviedb">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
             android:name="com.sample.themoviedb.TheMovieDbApp"
             android:allowBackup="false"
@@ -12,20 +14,27 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.sample.themoviedb.browse.MovieBrowserActivity"
-                  android:launchMode="singleTop"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/AppTheme">
+        <activity
+                android:name="com.sample.themoviedb.browse.MovieBrowserActivity"
+                android:launchMode="singleTop"
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.sample.themoviedb.details.MovieDetailsActivity"
-                  android:screenOrientation="portrait"
-                  android:parentActivityName="com.sample.themoviedb.browse.MovieBrowserActivity"
-                  android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity
+                android:name="com.sample.themoviedb.details.MovieDetailsActivity"
+                android:parentActivityName="com.sample.themoviedb.browse.MovieBrowserActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+                android:name=".browse.search.SearchActivity"
+                android:parentActivityName="com.sample.themoviedb.browse.MovieBrowserActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

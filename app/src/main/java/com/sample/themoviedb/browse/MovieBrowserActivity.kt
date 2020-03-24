@@ -11,6 +11,7 @@ import com.sample.themoviedb.R
 import com.sample.themoviedb.TheMovieDbApp
 import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.browse.intheatres.InTheatreFragment
+import com.sample.themoviedb.browse.search.SearchActivity
 import com.sample.themoviedb.browse.search.SearchViewModel
 import com.sample.themoviedb.common.BaseActivity
 import com.sample.themoviedb.common.ViewModelResult
@@ -27,22 +28,7 @@ import timber.log.Timber
  * 2. ViewModel corresponds to a single type of data and
  * works with two way databinding( which is not demonstrated in this app thou)
  */
-class MovieBrowserActivity : BaseActivity(), SearchView.OnQueryTextListener {
-
-    override fun onQueryTextSubmit(query: String?): Boolean = true
-
-
-    override fun onQueryTextChange(newText: String?): Boolean {
-        newText?.trim()
-            ?.let {
-                if (it.isEmpty()) {
-                    //inTheatresViewModel.refresh()
-                } else {
-                    searchViewModel.search(it)
-                }
-            }
-        return true
-    }
+class MovieBrowserActivity : BaseActivity() {
 
     fun onClick(movie: Movie) {
         val intent = Intent(this, MovieDetailsActivity::class.java)
@@ -53,7 +39,6 @@ class MovieBrowserActivity : BaseActivity(), SearchView.OnQueryTextListener {
         intent.putExtra(MovieDetailsActivity.EXTRA_OVERVIEW, movie.overview)
         startActivity(intent)
     }
-
 
 
     private val searchViewModel by lazy {
@@ -70,8 +55,12 @@ class MovieBrowserActivity : BaseActivity(), SearchView.OnQueryTextListener {
         supportActionBar?.title = getString(R.string.title_browse_movies)
         supportFragmentManager
             .beginTransaction()
-            .setCustomAnimations(android.R.animator.fade_in,0, 0, android.R.animator.fade_out)
-            .replace(R.id.fragmentContainer,InTheatreFragment(), InTheatreFragment::class.java.simpleName)
+            .setCustomAnimations(android.R.animator.fade_in, 0, 0, android.R.animator.fade_out)
+            .replace(
+                R.id.fragmentContainer,
+                InTheatreFragment(),
+                InTheatreFragment::class.java.simpleName
+            )
             .addToBackStack(MovieBrowserActivity::class.java.simpleName)
             .commitAllowingStateLoss()
 
@@ -79,9 +68,12 @@ class MovieBrowserActivity : BaseActivity(), SearchView.OnQueryTextListener {
             Timber.d(it.toString())
             when (it) {
 
-                is ViewModelResult.Progress -> {}
-                is ViewModelResult.Success -> {}
-                is ViewModelResult.Failure -> {}
+                is ViewModelResult.Progress -> {
+                }
+                is ViewModelResult.Success -> {
+                }
+                is ViewModelResult.Failure -> {
+                }
             }
 
         })
@@ -89,8 +81,7 @@ class MovieBrowserActivity : BaseActivity(), SearchView.OnQueryTextListener {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.browser_menu, menu)
-        (menu.findItem(R.id.action_search).actionView as SearchView).setOnQueryTextListener(this)
-        return true
+        return super.onCreateOptionsMenu(menu)
     }
 
 
@@ -98,9 +89,16 @@ class MovieBrowserActivity : BaseActivity(), SearchView.OnQueryTextListener {
         if (item.itemId == R.id.action_filter) {
             supportFragmentManager.beginTransaction()
                 .setCustomAnimations(android.R.animator.fade_in, 0, 0, android.R.animator.fade_out)
-                .replace(R.id.fragmentContainer, GenresFragment(), GenresFragment::class.java.simpleName)
+                .replace(
+                    R.id.fragmentContainer,
+                    GenresFragment(),
+                    GenresFragment::class.java.simpleName
+                )
                 .addToBackStack(MovieBrowserActivity::class.java.simpleName)
                 .commitAllowingStateLoss()
+            return true
+        } else if (item.itemId == R.id.action_search) {
+            startActivity(Intent(this, SearchActivity::class.java))
             return true
         }
         return super.onOptionsItemSelected(item)
