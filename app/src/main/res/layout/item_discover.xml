@@ -8,7 +8,6 @@
 
     <ImageView
             android:id="@+id/movieImage"
-            android:src="@drawable/ic_baseline_photo_24px"
             android:layout_width="match_parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_height="0px"

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sample.themoviedb.R
@@ -113,3 +112,5 @@ class MovieBrowserActivity : BaseActivity() {
     }
 
 }
+
+

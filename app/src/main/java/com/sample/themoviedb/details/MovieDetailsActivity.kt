@@ -62,7 +62,7 @@ class MovieDetailsActivity : BaseActivity() {
         supportActionBar?.apply {
             title = null
             setDisplayHomeAsUpEnabled(true)
-            setHomeButtonEnabled(true)
+            setDisplayShowHomeEnabled(true)
         }
         movieImage?.run { backdropImgView.loadImage(this) } ?: run {
             backdropImgView.scaleType = ImageView.ScaleType.CENTER_INSIDE
