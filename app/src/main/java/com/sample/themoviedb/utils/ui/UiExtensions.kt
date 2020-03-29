@@ -2,13 +2,18 @@ package com.sample.themoviedb.utils.ui
 
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.sample.themoviedb.R
 
+
 fun ImageView.loadImage(path: String) {
+    val cropOptions = RequestOptions()
+        .placeholder(R.drawable.ic_baseline_photo_24px)
+        .fallback(R.drawable.ic_baseline_photo_24px)
+        .error(R.drawable.ic_baseline_photo_24px)
     Glide.with(this)
         .load("https://image.tmdb.org/t/p/w1280/$path")
-        .fallback(R.drawable.ic_baseline_photo_24px)
-        .placeholder(R.drawable.ic_baseline_photo_24px)
-        .error(R.drawable.ic_baseline_photo_24px)
+        .apply(cropOptions)
+        .centerCrop()
         .into(this)
 }

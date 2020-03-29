@@ -1,13 +1,14 @@
-package com.sample.themoviedb.browse.search
+package com.sample.themoviedb.search
 
 import android.app.Application
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.api.search.SearchApi
-import com.sample.themoviedb.common.BaseViewModel
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.MainThreadExecutor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,16 +26,18 @@ import kotlinx.coroutines.launch
  * This avoids an api call for every new char entered by the user and conserves data usage
  */
 @ExperimentalCoroutinesApi
-class SearchViewModel(application: Application, private val searchApi: SearchApi) :
-    BaseViewModel<PagedList<Movie>>(application) {
-    val config = PagedList.Config.Builder()
+class SearchViewModel(searchApi: SearchApi) : ViewModel() {
+    private val _resultsLiveData =
+        MediatorLiveData<ViewModelResult<PagedList<Movie>, Throwable>>()//TODO why use mediator
+    val resultsLiveData: LiveData<ViewModelResult<PagedList<Movie>, Throwable>> = _resultsLiveData
+    private val config = PagedList.Config.Builder()
         .setEnablePlaceholders(false)
         .setInitialLoadSizeHint(20)
         .setPageSize(20).build()
 
-    val executor = MainThreadExecutor()
+    private val executor = MainThreadExecutor()
 
-    var _search: LiveData<PagedList<Movie>>? = null
+    private var _search: LiveData<PagedList<Movie>>? = null
 
     private val factory = SearchDSFactory(
         searchApi,

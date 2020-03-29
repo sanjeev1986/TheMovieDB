@@ -1,14 +1,11 @@
 package com.sample.themoviedb.browse.intheatres
 
-import android.app.Application
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.api.genres.Genre
 import com.sample.themoviedb.api.movies.MovieApi
-import com.sample.themoviedb.common.BaseViewModel
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.MainThreadExecutor
 import java.util.*
@@ -18,10 +15,11 @@ import java.util.*
  * This can also be coded to you FusedLocationClient to get current location. But i have
  * kept it simple
  */
-class InTheatresViewModel(application: Application, movieApi: MovieApi) :
-    BaseViewModel<PagedList<Movie>>(application) {
+class InTheatresViewModel(movieApi: MovieApi) : ViewModel() {
     private val _error = MutableLiveData<Throwable>()
-
+    private val _resultsLiveData = MediatorLiveData<ViewModelResult<PagedList<Movie>, Throwable>>()//TODO why use mediator
+    val resultsLiveData: LiveData<ViewModelResult<PagedList<Movie>, Throwable>>
+        get() = _resultsLiveData
     private val factory = InTheatresDSFactory(
         Locale.getDefault().country,
         movieApi,

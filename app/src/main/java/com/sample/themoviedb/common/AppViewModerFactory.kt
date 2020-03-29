@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sample.themoviedb.api.ApiManager
 import com.sample.themoviedb.browse.intheatres.InTheatresViewModel
-import com.sample.themoviedb.browse.search.SearchViewModel
+import com.sample.themoviedb.search.SearchViewModel
 import com.sample.themoviedb.genres.GenresViewModel
 import com.sample.themoviedb.repositories.GenreRepository
 import com.sanj.appstarterpack.platform.PlatformManager
@@ -41,7 +41,6 @@ class AppViewModerFactory(
         testInstance ?: object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return InTheatresViewModel(
-                    application,
                     apiManager.movieApi
                 ) as T
             }
@@ -51,7 +50,6 @@ class AppViewModerFactory(
         testInstance ?: object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return SearchViewModel(
-                    application,
                     apiManager.searchApi
                 ) as T
             }

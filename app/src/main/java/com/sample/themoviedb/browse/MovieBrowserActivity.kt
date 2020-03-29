@@ -10,8 +10,8 @@ import com.sample.themoviedb.R
 import com.sample.themoviedb.TheMovieDbApp
 import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.browse.intheatres.InTheatreFragment
-import com.sample.themoviedb.browse.search.SearchActivity
-import com.sample.themoviedb.browse.search.SearchViewModel
+import com.sample.themoviedb.search.SearchActivity
+import com.sample.themoviedb.search.SearchViewModel
 import com.sample.themoviedb.common.BaseActivity
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.details.MovieDetailsActivity

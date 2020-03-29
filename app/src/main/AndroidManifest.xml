@@ -31,7 +31,7 @@
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-                android:name=".browse.search.SearchActivity"
+                android:name=".search.SearchActivity"
                 android:parentActivityName="com.sample.themoviedb.browse.MovieBrowserActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme" />

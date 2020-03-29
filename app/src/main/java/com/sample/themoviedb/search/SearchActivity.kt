@@ -1,4 +1,4 @@
-package com.sample.themoviedb.browse.search
+package com.sample.themoviedb.search
 
 import android.content.Intent
 import android.os.Bundle
