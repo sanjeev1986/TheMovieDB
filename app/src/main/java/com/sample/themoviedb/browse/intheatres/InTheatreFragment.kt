@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
@@ -150,10 +151,12 @@ class InTheatreFragment : Fragment() {
     private inner class MovieViewHolder(private var view: View) :
         RecyclerView.ViewHolder(view) {
         private val movieImage = view.findViewById<ImageView>(R.id.movieImage)
+        private val movieTitle = view.findViewById<TextView>(R.id.titleTxtView)
 
         fun bind(movie: Movie) {
             with(movie) {
                 posterPath?.apply { movieImage.loadImage(this) }
+                movieTitle.text = title
             }
             view.setOnClickListener {
                 this@InTheatreFragment.onClick(movieImage, movie)

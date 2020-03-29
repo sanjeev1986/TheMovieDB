@@ -20,6 +20,7 @@ class TheMovieDbApp : Application() {
     companion object {
         fun getInstance(context: Context): TheMovieDbApp = context.applicationContext as TheMovieDbApp
         fun getInstance(activity: AppCompatActivity): TheMovieDbApp = activity.applicationContext as TheMovieDbApp
+        fun getInstance(fragment: Fragment): TheMovieDbApp = fragment.activity!!.applicationContext as TheMovieDbApp
     }
 
     override fun onCreate() {

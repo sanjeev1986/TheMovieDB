@@ -10,6 +10,7 @@ import com.sample.themoviedb.genres.GenresViewModel
 import com.sample.themoviedb.repositories.GenreRepository
 import com.sanj.appstarterpack.platform.PlatformManager
 import com.sanj.appstarterpack.storage.StorageManager
+import kotlin.reflect.KClass
 
 /**
  * View model Abstract factory
@@ -27,18 +28,19 @@ class AppViewModerFactory(
 
 
     companion object {
-        private var testInstance: ViewModelProvider.Factory? = null
+        private var testInstanceMap = mutableMapOf<KClass<*>,ViewModelProvider.Factory>()
+
         /**
          * Set this instance for Espresso testing
          */
-        fun setInstance(mock: ViewModelProvider.Factory) {
-            testInstance = mock
+        fun setInstance(cls: KClass<*>, mock: ViewModelProvider.Factory) {
+            testInstanceMap[cls] = mock
         }
     }
 
 
     fun buildBrowseMoviesViewModelFactory(): ViewModelProvider.Factory =
-        testInstance ?: object : ViewModelProvider.Factory {
+        testInstanceMap.remove(InTheatresViewModel::class) ?: object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return InTheatresViewModel(
                     apiManager.movieApi
@@ -47,7 +49,7 @@ class AppViewModerFactory(
         }
 
     fun buildSearchViewModelFactory(): ViewModelProvider.Factory =
-        testInstance ?: object : ViewModelProvider.Factory {
+        testInstanceMap.remove(SearchViewModel::class) ?: object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return SearchViewModel(
                     apiManager.searchApi
@@ -56,7 +58,7 @@ class AppViewModerFactory(
         }
 
     fun buildGenreViewModelFactory(): ViewModelProvider.Factory =
-        testInstance ?: object : ViewModelProvider.Factory {
+        testInstanceMap.remove(GenresViewModel::class )?: object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return GenresViewModel(
                     GenreRepository(
