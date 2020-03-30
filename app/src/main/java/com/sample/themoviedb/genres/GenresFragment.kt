@@ -14,13 +14,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sample.themoviedb.R
 import com.sample.themoviedb.TheMovieDbApp
 import com.sample.themoviedb.api.genres.Genre
+import com.sample.themoviedb.common.BaseFragment
+import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.ui.GridItemDecoration
+import com.sample.themoviedb.utils.ui.baseActivity
 
-class GenresFragment : Fragment() {
+class GenresFragment : BaseFragment(){
 
     private val listOfSelectedGenres = mutableSetOf<Genre>()
     private lateinit var genreGridView: RecyclerView
-    private lateinit var menu:Menu
+    private lateinit var menu: Menu
 
     private val viewModel by lazy {
         activity?.let {
@@ -49,9 +52,23 @@ class GenresFragment : Fragment() {
             addItemDecoration(GridItemDecoration(resources.getDimensionPixelOffset(R.dimen.genre_filter_margin)))
         }
         activity?.run {
-            viewModel.selectedGenres.value?.forEach{listOfSelectedGenres.add(it)}
-            viewModel.genresLiveData.observe(this, Observer {
-                genreGridView.adapter = GenreGridAdapter(it)
+            viewModel.selectedGenres.value?.forEach { listOfSelectedGenres.add(it) }
+            viewModel.genresLiveData.observe(this@GenresFragment, Observer {
+                when (it) {
+                    is ViewModelResult.Success -> {
+                        genreGridView.adapter = GenreGridAdapter(it.result)
+                    }
+                    is ViewModelResult.Failure -> {
+                        it.fallback?.run { genreGridView.adapter = GenreGridAdapter(this) }
+                        baseActivity().prepareErrorSnackBar(
+                            "No Internet Connection. Check you network settings and refresh",
+                            "REFRESH"
+                        ) {
+                            viewModel.fetchGenres()
+                        }.show()
+                    }
+                }
+
             })
             viewModel.fetchGenres()
         }
@@ -71,14 +88,15 @@ class GenresFragment : Fragment() {
         return if (item.itemId == android.R.id.home) {
             viewModel.selectedGenres.value = listOfSelectedGenres
             activity?.supportFragmentManager?.popBackStack()
-            (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            baseActivity().supportActionBar?.setDisplayHomeAsUpEnabled(false)
             true
         } else {
             super.onOptionsItemSelected(item)
         }
     }
 
-    private inner class GenreGridAdapter(private val listOfGenre: List<Genre>) : RecyclerView.Adapter<GenreViewHolder>() {
+    private inner class GenreGridAdapter(private val listOfGenre: List<Genre>) :
+        RecyclerView.Adapter<GenreViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenreViewHolder =
             GenreViewHolder(
@@ -91,7 +109,8 @@ class GenresFragment : Fragment() {
 
         override fun getItemCount(): Int = listOfGenre.size
 
-        override fun onBindViewHolder(holder: GenreViewHolder, position: Int) = holder.bind(listOfGenre[position])
+        override fun onBindViewHolder(holder: GenreViewHolder, position: Int) =
+            holder.bind(listOfGenre[position])
 
     }
 
@@ -110,7 +129,12 @@ class GenresFragment : Fragment() {
             view.setOnClickListener {
                 genretxtView.toggle()
                 if (genretxtView.isChecked) {
-                    genretxtView.setTextColor(ContextCompat.getColor(view.context, R.color.colorAccent))
+                    genretxtView.setTextColor(
+                        ContextCompat.getColor(
+                            view.context,
+                            R.color.colorAccent
+                        )
+                    )
                     listOfSelectedGenres.add(genre)
                 } else {
                     genretxtView.setTextColor(ContextCompat.getColor(view.context, R.color.white))

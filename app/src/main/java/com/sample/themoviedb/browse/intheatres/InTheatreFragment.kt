@@ -23,12 +23,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.sample.themoviedb.R
 import com.sample.themoviedb.TheMovieDbApp
 import com.sample.themoviedb.api.Movie
+import com.sample.themoviedb.common.BaseFragment
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.details.MovieDetailsActivity
 import com.sample.themoviedb.genres.GenresViewModel
+import com.sample.themoviedb.utils.ui.baseActivity
 import com.sample.themoviedb.utils.ui.loadImage
 
-class InTheatreFragment : Fragment() {
+class InTheatreFragment : BaseFragment() {
 
     private val genresViewModel by lazy {
         activity?.run {
@@ -87,14 +89,9 @@ class InTheatreFragment : Fragment() {
                 }
                 is ViewModelResult.Failure -> {
                     inThreatresParentView.isRefreshing = false
-                    activity?.run {
-                        Snackbar.make(
-                            findViewById(android.R.id.content),
-                            getString(R.string.no_network),
-                            Snackbar.LENGTH_LONG
-                        ).show()
-                    }
-
+                    baseActivity().prepareErrorSnackBar( getString(R.string.no_network),"REFRESH"){
+                        inTheatresViewModel.refresh(genresViewModel.selectedGenres.value)
+                    }.show()
                 }
             }
 

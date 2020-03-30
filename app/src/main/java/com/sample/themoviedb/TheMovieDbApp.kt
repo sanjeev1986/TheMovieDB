@@ -52,10 +52,7 @@ class TheMovieDbApp : Application() {
      * Singleton HTTPStack instance
      */
     private val httpStack by lazy(LazyThreadSafetyMode.NONE) {
-        HttpStack(
-            BuildConfig.BASE_URL,
-            cacheDir
-        )
+        HttpStack(BuildConfig.BASE_URL, cacheDir)
     }
 
     /**

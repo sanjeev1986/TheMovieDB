@@ -4,6 +4,8 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sample.themoviedb.R
+import com.sample.themoviedb.common.BaseActivity
+import com.sample.themoviedb.common.BaseFragment
 
 
 fun ImageView.loadImage(path: String) {
@@ -17,3 +19,5 @@ fun ImageView.loadImage(path: String) {
         .centerCrop()
         .into(this)
 }
+
+fun BaseFragment.baseActivity(): BaseActivity = activity as BaseActivity
