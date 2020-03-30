@@ -1,15 +1,11 @@
 package com.sample.themoviedb.utils.network
 
 import com.sample.themoviedb.BuildConfig
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.net.URL
@@ -51,18 +47,7 @@ class HttpStack(
         retrofitBuilder
             .baseUrl(baseUrl)
             .client(okhttpClient)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-    }
-
-
-    inline fun <reified T> constructApiFacade(): T = retrofit.create(T::class.java)
-
-    fun <T> dispatchHttpRequest(retrofitSingle: Single<T>): Single<T> {
-        return retrofitSingle.compose { observable ->
-            observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-        }
     }
 }

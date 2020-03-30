@@ -3,11 +3,12 @@ package com.sample.themoviedb.repositories
 import com.sample.themoviedb.api.genres.Genre
 import com.sample.themoviedb.api.genres.GenreApi
 import com.sample.themoviedb.api.genres.GenreResponse
-import com.sanj.appstarterpack.platform.*
-import com.sanj.appstarterpack.storage.disk.DiskCache
-import com.sanj.appstarterpack.storage.memory.InMemoryCache
+import com.sample.themoviedb.platform.Disconnected
+import com.sample.themoviedb.platform.NetworkManager
+import com.sample.themoviedb.storage.CacheResult
+import com.sample.themoviedb.storage.disk.DiskCache
+import com.sample.themoviedb.storage.memory.InMemoryCache
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.rx2.await
 import kotlinx.coroutines.withContext
 
 class GenreRepository(
@@ -20,37 +21,43 @@ class GenreRepository(
     suspend fun fetchGenres(refreshCache: Boolean = false): List<Genre> {
         return if (refreshCache) {
             withContext(Dispatchers.IO) {
-                try {
-                    genreApi.fetchGenres().apply {
-                        inMemoryCache.put(GenreResponse::class.java, this)
-                        diskCache.saveFile(GenreResponse::class.java, this).await()
+                genreApi.fetchGenres().apply {
+                    inMemoryCache.put(GenreResponse::class, this)
+                    diskCache.saveFile(GenreResponse::class, this)
+                }.genres
+            }
+        } else {
+            return when (val cacheResult = inMemoryCache.get(GenreResponse::class)) {
+                is CacheResult.CacheHit -> {
+                    cacheResult.result.genres
+                }
+                is CacheResult.CacheMiss, is CacheResult.CacheError -> {
+                    withContext(Dispatchers.IO) {
+                        when (val diskCacheResult = inMemoryCache.get(GenreResponse::class)) {
+                            is CacheResult.CacheHit -> {
+                                inMemoryCache.put(
+                                    GenreResponse::class,
+                                    diskCacheResult.result
+                                ).genres
+                            }
+                            is CacheResult.CacheMiss, is CacheResult.CacheError -> {
+                                when (val nwkStatus = networkManager.getNetworkStatus()) {
+                                    is Disconnected -> {
+                                        throw nwkStatus.e
+                                    }
+                                    else -> {
+                                        genreApi.fetchGenres().apply {
+                                            inMemoryCache.put(GenreResponse::class, this)
+                                            diskCache.saveFile(GenreResponse::class, this)
+                                        }.genres
+                                    }
+                                }
 
-                    }.genres
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    throw e
+                            }
+                        }
+                    }
                 }
             }
-
-        } else {
-            inMemoryCache.get(GenreResponse::class.java).await()?.genres
-                ?: return try {
-                    withContext(Dispatchers.IO) {
-                        diskCache.readFile(GenreResponse::class.java).await()?.genres
-                            ?: kotlin.run {
-                                when (networkManager.getNetworkStatus().await()) {
-                                    is Disconnected -> emptyList()
-                                    else -> genreApi.fetchGenres().apply {
-                                        inMemoryCache.put(GenreResponse::class.java, this)
-                                        diskCache.saveFile(GenreResponse::class.java, this).await()
-                                    }.genres
-                                }
-                            }
-                    }
-                } catch (e: java.lang.Exception) {
-                    e.printStackTrace()
-                    throw e
-                }
         }
     }
 }

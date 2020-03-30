@@ -8,8 +8,8 @@ import com.sample.themoviedb.browse.intheatres.InTheatresViewModel
 import com.sample.themoviedb.search.SearchViewModel
 import com.sample.themoviedb.genres.GenresViewModel
 import com.sample.themoviedb.repositories.GenreRepository
-import com.sanj.appstarterpack.platform.PlatformManager
-import com.sanj.appstarterpack.storage.StorageManager
+import com.sample.themoviedb.platform.PlatformManager
+import com.sample.themoviedb.storage.StorageManager
 import kotlin.reflect.KClass
 
 /**

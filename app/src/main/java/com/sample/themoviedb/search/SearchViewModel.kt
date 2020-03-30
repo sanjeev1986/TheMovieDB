@@ -1,6 +1,5 @@
 package com.sample.themoviedb.search
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel

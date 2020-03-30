@@ -3,7 +3,6 @@ package com.sample.themoviedb.search
 import androidx.paging.DataSource
 import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.api.search.SearchApi
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 
 /**

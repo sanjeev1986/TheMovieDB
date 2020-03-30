@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.api.movies.MovieApi
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.CoroutineScope
 
 /**
