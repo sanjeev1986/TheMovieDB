@@ -20,8 +20,8 @@
                 android:id="@+id/toolbarDetails"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@android:color/transparent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@drawable/gradient_movie_title_toolbar"/>
 
         <TextView
                 android:id="@+id/titleTxtView"
@@ -38,15 +38,14 @@
                 android:id="@+id/seperatorOne"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:background="#888888"
                 app:layout_constraintTop_toBottomOf="@id/titleTxtView" />
 
         <ImageView
                 android:id="@+id/movieImage"
-                android:layout_width="90dp"
+                android:layout_width="120dp"
                 android:layout_height="0px"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintDimensionRatio="W,1.5:1"
                 app:layout_constraintStart_toStartOf="parent"
@@ -56,9 +55,9 @@
                 android:id="@+id/space"
                 android:layout_width="8dp"
                 android:layout_height="0px"
-                android:layout_marginLeft="4dp"
+                android:layout_marginLeft="2dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginRight="4dp"
+                android:layout_marginRight="2dp"
                 app:layout_constraintBottom_toBottomOf="@id/movieImage"
                 app:layout_constraintStart_toEndOf="@id/movieImage"
                 app:layout_constraintTop_toTopOf="@id/movieImage" />
@@ -68,7 +67,7 @@
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="8dp"
                 android:fontFamily="@font/roboto_regular"
                 android:padding="8dp"
                 android:textSize="16sp"

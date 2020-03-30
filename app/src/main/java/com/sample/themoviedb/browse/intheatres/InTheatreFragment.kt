@@ -113,9 +113,21 @@ class InTheatreFragment : BaseFragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
+        if(!genresViewModel.selectedGenres.value.isNullOrEmpty()){
+            menu.findItem(R.id.action_filter)?.icon?.apply {
+                setTint(
+                    ContextCompat.getColor(
+                        baseActivity(),
+                        R.color.colorAccent
+                    )
+                )
+            }
+        }
         menu.findItem(R.id.action_filter).isVisible = true
         menu.findItem(R.id.action_search).isVisible = true
-        (activity as AppCompatActivity).supportActionBar?.title = "In Theatres"
+        baseActivity().supportActionBar?.title = "In Theatres"
+        return super.onPrepareOptionsMenu(menu)
+
     }
 
     val diffUtil: DiffUtil.ItemCallback<Movie> = object : DiffUtil.ItemCallback<Movie>() {
