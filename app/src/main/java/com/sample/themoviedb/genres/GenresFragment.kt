@@ -5,7 +5,7 @@ import android.view.*
 import android.widget.CheckedTextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -14,10 +14,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.sample.themoviedb.R
 import com.sample.themoviedb.TheMovieDbApp
 import com.sample.themoviedb.api.genres.Genre
+import com.sample.themoviedb.common.BaseActivity
 import com.sample.themoviedb.common.BaseFragment
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.ui.GridItemDecoration
-import com.sample.themoviedb.utils.ui.baseActivity
 
 class GenresFragment : BaseFragment(){
 
@@ -53,14 +53,14 @@ class GenresFragment : BaseFragment(){
         }
         activity?.run {
             viewModel.selectedGenres.value?.forEach { listOfSelectedGenres.add(it) }
-            viewModel.genresLiveData.observe(this@GenresFragment, Observer {
+            viewModel.genresLiveData.observe(viewLifecycleOwner, Observer {
                 when (it) {
                     is ViewModelResult.Success -> {
                         genreGridView.adapter = GenreGridAdapter(it.result)
                     }
                     is ViewModelResult.Failure -> {
                         it.fallback?.run { genreGridView.adapter = GenreGridAdapter(this) }
-                        baseActivity().prepareErrorSnackBar(
+                        (requireActivity() as BaseActivity).prepareErrorSnackBar(
                             "No Internet Connection. Check you network settings and refresh",
                             "REFRESH"
                         ) {
@@ -73,22 +73,22 @@ class GenresFragment : BaseFragment(){
             viewModel.fetchGenres()
         }
         setHasOptionsMenu(true)
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        requireActivity().actionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         this.menu = menu
-        (activity as AppCompatActivity).supportActionBar?.title = "Filters"
-        menu.findItem(R.id.action_filter).isVisible = false
-        menu.findItem(R.id.action_search).isVisible = false
+        (requireActivity() as FragmentActivity).actionBar?.title = "Filters"
+        menu.findItem(R.id.action_filter)?.isVisible = false
+        menu.findItem(R.id.action_search)?.isVisible = false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (item.itemId == android.R.id.home) {
             viewModel.selectedGenres.value = listOfSelectedGenres
             activity?.supportFragmentManager?.popBackStack()
-            baseActivity().supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
             true
         } else {
             super.onOptionsItemSelected(item)

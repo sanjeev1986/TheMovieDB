@@ -23,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sample.themoviedb.R
 import com.sample.themoviedb.TheMovieDbApp
 import com.sample.themoviedb.api.Movie
+import com.sample.themoviedb.common.BaseActivity
 import com.sample.themoviedb.common.BaseFragment
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.details.MovieDetailsActivity
@@ -89,7 +90,7 @@ class InTheatreFragment : BaseFragment() {
                 }
                 is ViewModelResult.Failure -> {
                     inThreatresParentView.isRefreshing = false
-                    baseActivity().prepareErrorSnackBar( getString(R.string.no_network),"REFRESH"){
+                    (requireActivity() as BaseActivity).prepareErrorSnackBar( getString(R.string.no_network),"REFRESH"){
                         inTheatresViewModel.refresh(genresViewModel.selectedGenres.value)
                     }.show()
                 }
@@ -117,7 +118,7 @@ class InTheatreFragment : BaseFragment() {
             menu.findItem(R.id.action_filter)?.icon?.apply {
                 setTint(
                     ContextCompat.getColor(
-                        baseActivity(),
+                        requireActivity(),
                         R.color.colorAccent
                     )
                 )
@@ -125,7 +126,7 @@ class InTheatreFragment : BaseFragment() {
         }
         menu.findItem(R.id.action_filter).isVisible = true
         menu.findItem(R.id.action_search).isVisible = true
-        baseActivity().supportActionBar?.title = "In Theatres"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "In Theatres"
         return super.onPrepareOptionsMenu(menu)
 
     }

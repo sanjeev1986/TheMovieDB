@@ -6,6 +6,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
@@ -26,6 +27,7 @@ import com.sample.themoviedb.search.SearchActivity
 import io.mockk.mockk
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.instanceOf
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -34,11 +36,10 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class MovieBrowserActivityTest {
-    @get:Rule
-    val mCountingTaskExecutorRule = InstantTaskExecutorRule()
 
     private val movieApi: MovieApi = mockk()
     private val genreApi: GenreRepository = mockk()
+    private lateinit var scenari: ActivityScenario<MovieBrowserActivity>
 
     @Before
     fun setup() {
@@ -54,34 +55,32 @@ class MovieBrowserActivityTest {
                 return GenresViewModel(genreApi) as T
             }
         })
+        scenari = launchActivity()
+    }
+
+    @After
+    fun tearDown() {
+        scenari.close()
     }
 
     @Test
     fun testToolbar_title_action_icons() {
-        val scenario = launchActivity<MovieBrowserActivity>()
-        scenario.moveToState(Lifecycle.State.RESUMED)
         onView(allOf(instanceOf(TextView::class.java), withParent(withId(R.id.toolbar))))
             .check(matches(withText("In Theatres")))
         onView(withId(R.id.action_filter)).check(matches(isDisplayed()))
         onView((withId(R.id.action_search))).check(matches(isDisplayed()))
-        scenario.close()
     }
 
     @Test
     fun test_genre_filter_click_launches_genre_screen() {
-        val scenario = launchActivity<MovieBrowserActivity>()
-        scenario.moveToState(Lifecycle.State.RESUMED)
         onView(withId(R.id.action_filter)).perform(click())
         onView(withId(R.id.genreGridView)).check(matches(isDisplayed()))
         onView(allOf(instanceOf(TextView::class.java), withParent(withId(R.id.toolbar))))
             .check(matches(withText("In Theatres")))
-        scenario.close()
     }
 
     @Test
     fun test_search_click_launches_search_screen() {
-        val scenario = launchActivity<MovieBrowserActivity>()
-        scenario.moveToState(Lifecycle.State.RESUMED)
         Intents.init()
         onView(withId(R.id.action_search)).perform(click())
         Intents.intended(
@@ -90,8 +89,8 @@ class MovieBrowserActivityTest {
                     getApplicationContext(),
                     SearchActivity::class.java
                 )
-            ))
-        scenario.close()
+            )
+        )
     }
 
 }
