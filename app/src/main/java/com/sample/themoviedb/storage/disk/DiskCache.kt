@@ -16,6 +16,9 @@ import kotlin.reflect.KClass
 
 
 class DiskCache(private val context: Context, private val gson: Gson) {
+    companion object {
+        private val DIR = "AppCache"
+    }
 
     fun <T : Parcelable> saveFile(
         filename: KClass<T>,
@@ -25,7 +28,17 @@ class DiskCache(private val context: Context, private val gson: Gson) {
         var bout: BufferedOutputStream? = null
         try {
             val fileDir =
-                File((if (isCachedir) context.cacheDir else context.filesDir), filename.java.simpleName)
+                File(
+                    ((if (isCachedir) File(context.cacheDir, DIR) else File(
+                        context.filesDir,
+                        DIR
+                    )).also {
+                        if (!it.exists()) {
+                            it.mkdir()
+                        }
+                    }),
+                    filename.java.simpleName
+                )
             if (fileDir.exists()) {
                 context.deleteFile(filename.simpleName)
             }
@@ -56,7 +69,7 @@ class DiskCache(private val context: Context, private val gson: Gson) {
         var bin: BufferedReader? = null
         try {
             val fileDir = File(
-                (if (isCachedir) context.cacheDir else context.filesDir),
+                if (isCachedir) File(context.cacheDir, DIR) else File(context.filesDir, DIR),
                 cls.simpleName
             )
             if (fileDir.exists()) {
@@ -82,7 +95,19 @@ class DiskCache(private val context: Context, private val gson: Gson) {
 
     fun <T> deleteFile(filename: Class<T>, isCachedir: Boolean = true): Boolean {
         val file =
-            File((if (isCachedir) context.cacheDir else context.filesDir), filename.simpleName)
+            File(
+                (if (isCachedir) File(context.cacheDir, DIR) else File(context.filesDir, DIR)),
+                filename.simpleName
+            )
+        if (file.exists()) {
+            file.delete()
+            return true
+        }
+        return false
+    }
+
+    fun cleanDiskCache(isCachedir: Boolean = true): Boolean {
+        val file = (if (isCachedir) File(context.cacheDir, DIR) else File(context.filesDir, DIR))
         if (file.exists()) {
             file.delete()
             return true
