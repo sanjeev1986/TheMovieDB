@@ -1,17 +1,16 @@
 package com.sample.themoviedb.genres
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.sample.themoviedb.R
 import com.sample.themoviedb.api.genres.Genre
 import com.sample.themoviedb.common.AppViewModerFactory
 import com.sample.themoviedb.repositories.GenreRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -40,7 +39,7 @@ class GenresFragmentTest {
         )
 
         launchFragmentInContainer<GenresFragment>(
-            null, -1
+            null, R.style.AppTheme
         )
     }
 }

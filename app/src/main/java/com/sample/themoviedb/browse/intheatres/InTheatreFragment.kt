@@ -1,6 +1,7 @@
 package com.sample.themoviedb.browse.intheatres
 
 import android.content.Intent
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -46,7 +47,7 @@ class InTheatreFragment : BaseFragment() {
         ViewModelProviders.of(
             this
             ,
-            TheMovieDbApp.getInstance(context!!).appViewModerFactory.buildBrowseMoviesViewModelFactory()
+            TheMovieDbApp.getInstance(requireContext()).appViewModerFactory.buildBrowseMoviesViewModelFactory()
         ).get(InTheatresViewModel::class.java)
     }
 
@@ -78,7 +79,7 @@ class InTheatreFragment : BaseFragment() {
         inThreatresParentView = view.findViewById(R.id.inThreatresParentView)
         val movieAdapter = MovieListAdapter()
 
-        inTheatresViewModel.resultsLiveData.observe(this, Observer {
+        inTheatresViewModel.resultsLiveData.observe(viewLifecycleOwner, Observer {
 
             when (it) {
                 is ViewModelResult.Progress -> {
@@ -115,14 +116,9 @@ class InTheatreFragment : BaseFragment() {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         if(!genresViewModel.selectedGenres.value.isNullOrEmpty()){
-            menu.findItem(R.id.action_filter)?.icon?.apply {
-                setTint(
-                    ContextCompat.getColor(
-                        requireActivity(),
-                        R.color.colorAccent
-                    )
-                )
-            }
+            val animation = ContextCompat.getDrawable(requireContext(),R.drawable.avd_anim) as AnimatedVectorDrawable
+            menu.findItem(R.id.action_filter)?.icon = animation
+            animation.start()
         }
         menu.findItem(R.id.action_filter).isVisible = true
         menu.findItem(R.id.action_search).isVisible = true

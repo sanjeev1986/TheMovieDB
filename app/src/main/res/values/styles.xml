@@ -18,30 +18,35 @@
         <item name="colorOnBackground">#EEEEEE</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <!-- <item name="windowActionBar">false</item>
-           <item name="windowNoTitle">true</item>
-         <item name="colorOnPrimary">@color/colorPrimary</item>
-           <item name="colorOnSecondary">@color/colorPrimaryDark</item>
-           <item name="colorOnBackground">@color/colorAccent</item>
-           <item name="android:windowBackground">@color/windowBackground</item>
-           <item name="android:actionMenuTextColor">@color/white</item>
-           <item name="android:textColor">@color/white</item>itemTextAppearance
-           <item name="android:windowContentTransitions">true</item>
-           <item name="android:editTextColor">@android:color/white</item>
-           <item name="android:textColorHint">@android:color/white</item>
-           <item name="snackbarStyle">@style/MySnackBarStyle</item>-->
+        <item name="snackbarStyle">@style/snackbar_style</item>
+        <item name="snackbarButtonStyle">@style/snackbar_button</item>
+        <item name="snackbarTextViewStyle">@style/snackbar_text</item>
+
     </style>
 
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <!-- Customize color of navigation drawer icon and back arrow -->
         <item name="colorControlNormal">@color/white</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@color/colorAccent</item>
         <item name="actionMenuTextColor">@android:color/white</item>
     </style>
-    <!-- snackbar style -->
-    <style name="MySnackBarStyle" parent="Widget.MaterialComponents.Snackbar">
-        <item name="android:background">@android:color/black</item>
 
+    <style name="snackbar_style" parent="@style/Widget.MaterialComponents.Snackbar">
+        <item name="android:layout_margin">32dp</item>
+        <item name="android:background">@color/colorAccent</item>
+    </style>
+
+   <style name="snackbar_button" parent="@style/Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/white</item>
+       <item name="android:background">#000000</item>
+       <item name="backgroundTint">@null</item>
+       <item name="cornerRadius">5dp</item>
+       <item name="android:paddingLeft">5dp</item>
+       <item name="android:paddingRight">5dp</item>
+       <item name="elevation">0dp</item>
+    </style>
+
+    <style name="snackbar_text" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
+        <item name="android:textColor">@color/white</item>
     </style>
 </resources>

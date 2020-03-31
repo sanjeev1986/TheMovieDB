@@ -44,6 +44,7 @@ class InTheatresViewModel(movieApi: MovieApi) : ViewModel() {
         _resultsLiveData.addSource(_error) {
             _resultsLiveData.value = ViewModelResult.Failure(it)
         }
+        _resultsLiveData.value = ViewModelResult.Progress
     }
 
     fun refresh(genres: Set<Genre>? = null) {

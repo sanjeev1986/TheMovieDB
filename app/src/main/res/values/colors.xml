@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#202020</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#1BD9FF</color>
+    <color name="colorAccent">#00b8d4</color>
     <color name="windowBackground">#222222</color>
     <color name="white">#FFFFFF</color>
     <color name="progress">#37474F</color>

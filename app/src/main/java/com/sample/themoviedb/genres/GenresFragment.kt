@@ -5,7 +5,6 @@ import android.view.*
 import android.widget.CheckedTextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -61,7 +60,7 @@ class GenresFragment : BaseFragment(){
                     is ViewModelResult.Failure -> {
                         it.fallback?.run { genreGridView.adapter = GenreGridAdapter(this) }
                         (requireActivity() as BaseActivity).prepareErrorSnackBar(
-                            "No Internet Connection. Check you network settings and refresh",
+                             getString(R.string.no_network),
                             "REFRESH"
                         ) {
                             viewModel.fetchGenres()
@@ -73,13 +72,13 @@ class GenresFragment : BaseFragment(){
             viewModel.fetchGenres()
         }
         setHasOptionsMenu(true)
-        requireActivity().actionBar?.setDisplayHomeAsUpEnabled(true)
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         this.menu = menu
-        (requireActivity() as FragmentActivity).actionBar?.title = "Filters"
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.title = "Filters"
         menu.findItem(R.id.action_filter)?.isVisible = false
         menu.findItem(R.id.action_search)?.isVisible = false
     }
@@ -88,7 +87,7 @@ class GenresFragment : BaseFragment(){
         return if (item.itemId == android.R.id.home) {
             viewModel.selectedGenres.value = listOfSelectedGenres
             activity?.supportFragmentManager?.popBackStack()
-            (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            (requireActivity() as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
             true
         } else {
             super.onOptionsItemSelected(item)
