@@ -4,10 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.api.movies.MovieApi
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 /**
  * Paginated data source for Movies in theatres.
@@ -26,16 +23,15 @@ class InTheatresDataSource(
     ) {
         val currentPage = 1
         val nextPage = currentPage + 1
-        scope.launch {
-            try{
-                val result = withContext(Dispatchers.IO){
+        runBlocking {
+            try {
+                val result = withContext(Dispatchers.IO) {
                     api.fetchNowInTheatres(1, region, genres).results
-                }
-                callback.onResult(result ?: mutableListOf<Movie>(), currentPage, nextPage)
-            }catch (e:Exception){
+                } ?: emptyList()
+                callback.onResult(result, 0, result.size, currentPage, nextPage)
+            } catch (e: Exception) {
                 errorLiveData.value = e
             }
-
         }
     }
 
@@ -45,12 +41,12 @@ class InTheatresDataSource(
         val currentPage = params.key
         val nextPage = currentPage + 1
         scope.launch {
-            try{
-                val result = withContext(Dispatchers.IO){
+            try {
+                val result = withContext(Dispatchers.IO) {
                     api.fetchNowInTheatres(nextPage, region, genres).results
                 }
                 callback.onResult(result ?: mutableListOf<Movie>(), nextPage)
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 errorLiveData.value = e
             }
         }

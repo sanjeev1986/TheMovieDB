@@ -29,7 +29,7 @@ class InTheatresViewModel(movieApi: MovieApi) : ViewModel() {
     private val _movies by lazy {
         val config = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
-            .setInitialLoadSizeHint(20)
+            .setInitialLoadSizeHint(40)
             .setPageSize(20).build()
         val executor = MainThreadExecutor()
         LivePagedListBuilder<Int, Movie>(factory, config)
@@ -44,7 +44,6 @@ class InTheatresViewModel(movieApi: MovieApi) : ViewModel() {
         _resultsLiveData.addSource(_error) {
             _resultsLiveData.value = ViewModelResult.Failure(it)
         }
-        _resultsLiveData.value = ViewModelResult.Progress
     }
 
     fun refresh(genres: Set<Genre>? = null) {

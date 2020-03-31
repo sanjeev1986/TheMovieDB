@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.snackbar.Snackbar
+import com.airbnb.lottie.LottieAnimationView
 import com.sample.themoviedb.R
 import com.sample.themoviedb.TheMovieDbApp
 import com.sample.themoviedb.api.Movie
@@ -29,7 +29,6 @@ import com.sample.themoviedb.common.BaseFragment
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.details.MovieDetailsActivity
 import com.sample.themoviedb.genres.GenresViewModel
-import com.sample.themoviedb.utils.ui.baseActivity
 import com.sample.themoviedb.utils.ui.loadImage
 
 class InTheatreFragment : BaseFragment() {
@@ -47,7 +46,7 @@ class InTheatreFragment : BaseFragment() {
         ViewModelProviders.of(
             this
             ,
-            TheMovieDbApp.getInstance(requireContext()).appViewModerFactory.buildBrowseMoviesViewModelFactory()
+            TheMovieDbApp.getInstance(context!!).appViewModerFactory.buildBrowseMoviesViewModelFactory()
         ).get(InTheatresViewModel::class.java)
     }
 
@@ -79,19 +78,36 @@ class InTheatreFragment : BaseFragment() {
         inThreatresParentView = view.findViewById(R.id.inThreatresParentView)
         val movieAdapter = MovieListAdapter()
 
-        inTheatresViewModel.resultsLiveData.observe(viewLifecycleOwner, Observer {
+        inTheatresViewModel.resultsLiveData.observe(this@InTheatreFragment, Observer {
 
             when (it) {
                 is ViewModelResult.Progress -> {
                     inThreatresParentView.isRefreshing = true
                 }
                 is ViewModelResult.Success -> {
-                    movieAdapter.submitList(it.result)
+                    if (it.result.isEmpty()) {
+                        view.findViewById<LottieAnimationView>(R.id.animation_view).visibility =
+                            View.VISIBLE
+                        view.findViewById<LottieAnimationView>(R.id.animation_view).playAnimation()
+                        view.findViewById<RecyclerView>(R.id.inTheatresListView).visibility =
+                            View.INVISIBLE
+                    } else {
+                        view.findViewById<LottieAnimationView>(R.id.animation_view).visibility =
+                            View.INVISIBLE
+                        view.findViewById<LottieAnimationView>(R.id.animation_view).pauseAnimation()
+                        view.findViewById<RecyclerView>(R.id.inTheatresListView).visibility =
+                            View.VISIBLE
+                        movieAdapter.submitList(it.result)
+                    }
+
                     inThreatresParentView.isRefreshing = false
                 }
                 is ViewModelResult.Failure -> {
                     inThreatresParentView.isRefreshing = false
-                    (requireActivity() as BaseActivity).prepareErrorSnackBar( getString(R.string.no_network),"REFRESH"){
+                    (requireActivity() as BaseActivity).prepareErrorSnackBar(
+                        getString(R.string.no_network),
+                        "REFRESH"
+                    ) {
                         inTheatresViewModel.refresh(genresViewModel.selectedGenres.value)
                     }.show()
                 }
@@ -115,8 +131,11 @@ class InTheatreFragment : BaseFragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        if(!genresViewModel.selectedGenres.value.isNullOrEmpty()){
-            val animation = ContextCompat.getDrawable(requireContext(),R.drawable.avd_anim) as AnimatedVectorDrawable
+        if (!genresViewModel.selectedGenres.value.isNullOrEmpty()) {
+            val animation = ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.avd_anim
+            ) as AnimatedVectorDrawable
             menu.findItem(R.id.action_filter)?.icon = animation
             animation.start()
         }
