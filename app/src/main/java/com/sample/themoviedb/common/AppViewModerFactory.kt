@@ -66,10 +66,8 @@ class AppViewModerFactory(
                         storageManager.memoryCache,
                         storageManager.diskCache,
                         apiManager.genreApi
-                    )
+                    ), platformManager.networkManager
                 ) as T
             }
         }
-
-
 }

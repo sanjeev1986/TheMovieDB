@@ -5,9 +5,16 @@ import android.app.Application
 import android.content.Context
 
 import android.net.ConnectivityManager
+import android.net.Network
 import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Build
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
 import java.lang.Exception
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Connectivity manager abstraction
@@ -58,6 +65,57 @@ class NetworkManager(private val application: Application) {
 
         }
     }
+
+    @ExperimentalCoroutinesApi
+    fun listenToConnectivityChanges() = flow<NetworkStatus> {
+        emit(suspendCoroutine<NetworkStatus> { cont ->
+            val networkRequest = NetworkRequest.Builder()
+                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+                .addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
+                .build()
+            connectivityManager.registerNetworkCallback(
+                networkRequest,
+                object : ConnectivityManager.NetworkCallback() {
+                    override fun onLost(network: Network?) {
+                        cont.resume(Disconnected())
+                    }
+
+                    override fun onUnavailable() {
+                        cont.resume(Disconnected())
+                    }
+
+                    override fun onLosing(network: Network?, maxMsToLive: Int) {
+                        cont.resume(Disconnected())
+                    }
+
+                    override fun onAvailable(network: Network?) {
+                        connectivityManager.unregisterNetworkCallback(this)
+                        connectivityManager.getNetworkCapabilities(network)?.run {
+                            when {
+                                hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> cont.resume(
+                                    WIFI(
+                                        connectivityManager.isActiveNetworkMetered
+                                    )
+                                )
+                                hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> cont.resume(
+                                    Mobile(
+                                        connectivityManager.isActiveNetworkMetered
+                                    )
+                                )
+                                hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> cont.resume(
+                                    Ethernet(
+                                        connectivityManager.isActiveNetworkMetered
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            )
+        })
+    }.distinctUntilChanged()
+
 }
 
 
@@ -65,6 +123,6 @@ sealed class NetworkStatus
 data class WIFI(val isMetered: Boolean) : NetworkStatus()
 data class Mobile(val isMetered: Boolean) : NetworkStatus()
 data class Ethernet(val isMetered: Boolean) : NetworkStatus()
-data class Disconnected(val e: Exception = NotConnectedToInternet()) : NetworkStatus()
+data class Disconnected(val e: Exception = NotConnectedToInternet) : NetworkStatus()
 
-class NotConnectedToInternet : Exception("Not connected to internet")
+object NotConnectedToInternet : Exception("Not connected to internet")

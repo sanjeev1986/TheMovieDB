@@ -33,7 +33,7 @@ class GenreRepository(
                 }
                 is CacheResult.CacheMiss, is CacheResult.CacheError -> {
                     withContext(Dispatchers.IO) {
-                        when (val diskCacheResult = inMemoryCache.get(GenreResponse::class)) {
+                        when (val diskCacheResult = diskCache.readFile(GenreResponse::class)) {
                             is CacheResult.CacheHit -> {
                                 inMemoryCache.put(
                                     GenreResponse::class,

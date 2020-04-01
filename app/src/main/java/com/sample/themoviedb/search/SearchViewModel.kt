@@ -45,10 +45,8 @@ class SearchViewModel(searchApi: SearchApi) : ViewModel() {
         { _resultsLiveData.value = ViewModelResult.Progress }
     )
 
-    private val queryChannel = BroadcastChannel<String>(Channel.CONFLATED)
-
     @UseExperimental(FlowPreview::class)
-    internal val queryFlow = queryChannel.apply {
+    private val queryChannel = BroadcastChannel<String>(Channel.CONFLATED).apply {
         viewModelScope.launch {
             this@apply.asFlow()
                 .debounce(800)
