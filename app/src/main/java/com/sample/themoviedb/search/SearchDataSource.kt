@@ -3,10 +3,7 @@ package com.sample.themoviedb.search
 import androidx.paging.PageKeyedDataSource
 import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.api.search.SearchApi
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import timber.log.Timber
 
 /**
@@ -28,7 +25,7 @@ class SearchDataSource(
         val currentPage = 1
         val nextPage = currentPage + 1
         onProgress()
-        scope.launch {
+        runBlocking {
             try {
                 callback.onResult(withContext(Dispatchers.IO) {
                     api.searchMovieDb(1, query).results
@@ -50,7 +47,7 @@ class SearchDataSource(
         scope.launch {
             try {
                 callback.onResult(withContext(Dispatchers.IO) {
-                    api.searchMovieDb(nextPage, query).results
+                    api.searchMovieDb(currentPage, query).results
                 } ?: mutableListOf<Movie>(), nextPage)
             } catch (e: Exception) {
                 onError(e)

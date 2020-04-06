@@ -19,6 +19,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.sample.themoviedb.R
 import com.sample.themoviedb.TheMovieDbApp
 import com.sample.themoviedb.api.Movie
@@ -67,34 +68,52 @@ class SearchActivity : BaseActivity(), TextWatcher {
             Timber.d(it.toString())
             when (it) {
 
-                is ViewModelResult.Progress -> {
-                }
+                is ViewModelResult.Progress -> { }
                 is ViewModelResult.Success -> {
-                    movieAdapter.submitList(it.result)
+                    if(it.result.isEmpty()){
+                        findViewById<LottieAnimationView>(R.id.animation_view).apply {
+                            visibility = View.VISIBLE
+                            playAnimation()
+                        }
+                        findViewById<RecyclerView>(R.id.searchList).visibility = View.INVISIBLE
+                    }else{
+                        findViewById<LottieAnimationView>(R.id.animation_view).visibility = View.INVISIBLE
+                        findViewById<RecyclerView>(R.id.searchList).visibility = View.VISIBLE
+                        movieAdapter.submitList(it.result)
+                    }
+
                 }
                 is ViewModelResult.Failure -> {
+                    movieAdapter.submitList(null)
+                    findViewById<RecyclerView>(R.id.searchList).visibility = View.INVISIBLE
+                    findViewById<LottieAnimationView>(R.id.animation_view).apply {
+                        visibility = View.VISIBLE
+                        playAnimation()
+                    }
+
                 }
             }
-
         })
     }
 
-    val diffUtil: DiffUtil.ItemCallback<Movie> = object : DiffUtil.ItemCallback<Movie>() {
-        override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-            return oldItem.id == newItem.id
-        }
+    val diffUtil: DiffUtil.ItemCallback<Movie> =
+        object : DiffUtil.ItemCallback<Movie>() {
+            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+                return oldItem.id == newItem.id
+            }
 
-        override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-            return oldItem == newItem
+            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+                return oldItem == newItem
+            }
         }
-    }
 
     private inner class MovieListAdapter :
         PagedListAdapter<Movie, MovieViewHolder>(diffUtil) {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder =
             MovieViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.item_discover, parent, false)
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_discover, parent, false)
             )
 
         override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
@@ -140,13 +159,7 @@ class SearchActivity : BaseActivity(), TextWatcher {
 
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         s?.trim()
-            ?.let {
-                if (it.isEmpty()) {
-                    //inTheatresViewModel.refresh()
-                } else {
-                    searchViewModel.search(it.toString())
-                }
-            }
+            ?.run { searchViewModel.search(toString()) }
     }
 
 }

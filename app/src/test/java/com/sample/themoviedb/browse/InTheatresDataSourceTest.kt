@@ -6,6 +6,10 @@ import androidx.paging.PageKeyedDataSource
 import com.sample.themoviedb.api.movies.MovieApi
 import com.sample.themoviedb.browse.intheatres.InTheatresDataSource
 import io.mockk.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.test.TestCoroutineContext
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -24,7 +28,7 @@ class InTheatresDataSourceTest {
     @Before
     fun setup() {
         datasource =
-            InTheatresDataSource(region, null, api, errorLiveData)
+            InTheatresDataSource(region, null, api, CoroutineScope(newSingleThreadContext("UI thread")), errorLiveData)
     }
 
     @Test
