@@ -41,14 +41,6 @@ class MovieBrowserActivity : BaseActivity() {
         startActivity(intent)
     }
 
-
-    private val searchViewModel by lazy {
-        ViewModelProviders.of(
-            this
-            , TheMovieDbApp.getInstance(this).appViewModerFactory.buildSearchViewModelFactory()
-        ).get(SearchViewModel::class.java)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -64,20 +56,6 @@ class MovieBrowserActivity : BaseActivity() {
             )
             .addToBackStack(MovieBrowserActivity::class.java.simpleName)
             .commitAllowingStateLoss()
-
-        searchViewModel.resultsLiveData.observe(this, Observer {
-            Timber.d(it.toString())
-            when (it) {
-
-                is ViewModelResult.Progress -> {
-                }
-                is ViewModelResult.Success -> {
-                }
-                is ViewModelResult.Failure -> {
-                }
-            }
-
-        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

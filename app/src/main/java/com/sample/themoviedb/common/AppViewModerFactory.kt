@@ -1,6 +1,5 @@
 package com.sample.themoviedb.common
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sample.themoviedb.api.ApiManager
@@ -17,8 +16,6 @@ import kotlin.reflect.KClass
  */
 @Suppress("UNCHECKED_CAST")
 class AppViewModerFactory(
-    private val application: Application
-    ,
     private val apiManager: ApiManager
     ,
     private val platformManager: PlatformManager//not used but added to demonstrate app pattern scalability and ease of extension

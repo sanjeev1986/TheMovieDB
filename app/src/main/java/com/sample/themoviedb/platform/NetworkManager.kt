@@ -66,7 +66,6 @@ class NetworkManager(private val application: Application) {
         }
     }
 
-    @ExperimentalCoroutinesApi
     fun listenToConnectivityChanges() = flow<NetworkStatus> {
         emit(suspendCoroutine<NetworkStatus> { cont ->
             val networkRequest = NetworkRequest.Builder()
