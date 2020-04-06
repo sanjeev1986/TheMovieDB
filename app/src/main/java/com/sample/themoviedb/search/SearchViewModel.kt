@@ -14,10 +14,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 /**
@@ -26,45 +23,51 @@ import kotlinx.coroutines.launch
  */
 @ExperimentalCoroutinesApi
 class SearchViewModel(searchApi: SearchApi) : ViewModel() {
+    companion object {
+        object NoResultsFound : Throwable("No Results Found")
+    }
+
     private val _resultsLiveData =
         MediatorLiveData<ViewModelResult<PagedList<Movie>, Throwable>>()//TODO why use mediator
     val resultsLiveData: LiveData<ViewModelResult<PagedList<Movie>, Throwable>> = _resultsLiveData
-    private val config = PagedList.Config.Builder()
-        .setEnablePlaceholders(false)
-        .setInitialLoadSizeHint(20)
-        .setPageSize(20).build()
-
-    private val executor = MainThreadExecutor()
 
     private var _search: LiveData<PagedList<Movie>>? = null
 
-    private val factory = SearchDSFactory(
-        searchApi,
-        viewModelScope,
-        { error -> _resultsLiveData.value = ViewModelResult.Failure(error) },
-        { _resultsLiveData.value = ViewModelResult.Progress }
-    )
-
     @UseExperimental(FlowPreview::class)
-    private val queryChannel = BroadcastChannel<String>(Channel.CONFLATED).apply {
-        viewModelScope.launch {
+    private val queryChannel by lazy(LazyThreadSafetyMode.NONE) {
+        BroadcastChannel<String>(Channel.CONFLATED).apply {
             this@apply.asFlow()
                 .debounce(800)
-                .catch {
-                    it.printStackTrace()
-                }.collect { query ->
-                    factory.query = query
-                    factory.dataSource?.invalidate()
+                .distinctUntilChanged()
+                .onEach { query ->
                     _search?.run { _resultsLiveData.removeSource(this) }
-                    _search =
-                        LivePagedListBuilder<Int, Movie>(factory, config)
-                            .setFetchExecutor(executor)
+                    if (query.isNullOrBlank()) {
+                        _resultsLiveData.value = ViewModelResult.Failure(NoResultsFound)
+                    } else {
+                        _search = LivePagedListBuilder<Int, Movie>(
+                            SearchDSFactory(
+                                query,
+                                searchApi,
+                                viewModelScope,
+                                { error ->
+                                    _resultsLiveData.value = ViewModelResult.Failure(error)
+                                },
+                                { _resultsLiveData.value = ViewModelResult.Progress }
+                            ), PagedList.Config.Builder()
+                                .setEnablePlaceholders(false)
+                                .setPageSize(20)
+                                .setPrefetchDistance(20)
+                                .build()
+                        )
+                            .setFetchExecutor(MainThreadExecutor())
                             .build().also {
                                 _resultsLiveData.addSource(it) {
                                     _resultsLiveData.value = ViewModelResult.Success(it)
                                 }
                             }
-                }
+                    }
+                }.launchIn(viewModelScope)
+
         }
     }
 
@@ -72,6 +75,5 @@ class SearchViewModel(searchApi: SearchApi) : ViewModel() {
         viewModelScope.launch {
             queryChannel.offer(query)
         }
-
     }
 }

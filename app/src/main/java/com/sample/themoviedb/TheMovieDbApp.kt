@@ -26,7 +26,7 @@ class TheMovieDbApp : Application() {
             activity.applicationContext as TheMovieDbApp
 
         fun getInstance(fragment: Fragment): TheMovieDbApp =
-            fragment.activity!!.applicationContext as TheMovieDbApp
+            fragment.requireActivity().applicationContext as TheMovieDbApp
     }
 
     override fun onCreate() {
@@ -69,7 +69,7 @@ class TheMovieDbApp : Application() {
      * Singleton Viewmodel factory provider
      */
     val appViewModerFactory by lazy {
-        AppViewModerFactory(this, apiManager, platformManager, storageManager)
+        AppViewModerFactory(apiManager, platformManager, storageManager)
     }
 
     /**
