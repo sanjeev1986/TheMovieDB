@@ -20,7 +20,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
-        warningsAsErrors true
+        abortOnError false
     }
     buildTypes {
 
