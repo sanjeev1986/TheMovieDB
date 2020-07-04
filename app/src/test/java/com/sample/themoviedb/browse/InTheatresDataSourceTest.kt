@@ -4,12 +4,11 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.sample.themoviedb.api.movies.MovieApi
-import com.sample.themoviedb.browse.intheatres.InTheatresDataSource
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.newSingleThreadContext
-import kotlinx.coroutines.test.TestCoroutineContext
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule

@@ -3,5 +3,8 @@
     <string name="no_network">Check your internet and try again</string>
     <string name="title_browse_movies">Browse Movies</string>
     <string name="search">Search</string>
-
+    <string name="discover">Discover</string>
+    <string name="intheatres">In Threatres</string>
+    <string name="trending">Trending</string>
+    <string name="more">More</string>
 </resources>

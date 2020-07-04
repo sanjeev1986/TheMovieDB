@@ -2,8 +2,6 @@ package com.sample.themoviedb.browse
 
 import android.content.ComponentName
 import android.widget.TextView
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.test.core.app.ActivityScenario
@@ -14,12 +12,13 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import androidx.test.espresso.intent.rule.IntentsTestRule
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withParent
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sample.themoviedb.R
 import com.sample.themoviedb.api.movies.MovieApi
-import com.sample.themoviedb.browse.intheatres.InTheatresViewModel
 import com.sample.themoviedb.common.AppViewModerFactory
 import com.sample.themoviedb.genres.GenresViewModel
 import com.sample.themoviedb.repositories.GenreRepository
@@ -29,7 +28,6 @@ import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.instanceOf
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 

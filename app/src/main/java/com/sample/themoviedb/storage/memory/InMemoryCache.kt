@@ -5,12 +5,12 @@ package com.sample.themoviedb.storage.memory
 import android.content.ComponentCallbacks2
 import android.content.res.Configuration
 import android.util.LruCache
-import com.sample.themoviedb.storage.CacheResult
-import java.lang.Exception
 import kotlin.reflect.KClass
 
 class InMemoryCache(size: Int = 1 * 1024 * 1024/* Default 1 MB cache*/) : ComponentCallbacks2 {
-    override fun onLowMemory() {}
+    override fun onLowMemory() {
+        clearAll()
+    }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {}
 
@@ -22,32 +22,28 @@ class InMemoryCache(size: Int = 1 * 1024 * 1024/* Default 1 MB cache*/) : Compon
 
     private val memoryCache = LruCache<KClass<*>, Any?>(size)
 
-
-    fun <T : Any> get(key: KClass<T>): CacheResult<T, Throwable> {
+    fun <T : Any> get(key: KClass<*>): T? {
         val data = memoryCache[key]
         return try {
-            data?.let { CacheResult.CacheHit(it as T) } ?: CacheResult.CacheMiss
+            data as T?
         } catch (e: Exception) {
-            CacheResult.CacheError(InvalidConversionOperation(e))
+            return null
         }
     }
 
-    fun <T : Any> put(key: KClass<T>, data: T): T {
+    fun <T : Any> put(key: KClass<*>, data: T): T {
         memoryCache.put(key, data)
         return data
     }
 
-    fun <T : Any> remove(key: KClass<T>): CacheResult<T, Throwable> {
+    fun <T : Any> remove(key: KClass<*>): T? {
         val data = memoryCache.remove(key)
         return try {
-            data?.let { CacheResult.CacheHit(it as T) } ?: CacheResult.CacheMiss
+            data as T?
         } catch (e: Exception) {
-            CacheResult.CacheError(e)
+            return null
         }
     }
 
     fun clearAll() = memoryCache.evictAll()
-
-    class InvalidConversionOperation(throwable: Throwable) : Throwable(throwable)
 }
-

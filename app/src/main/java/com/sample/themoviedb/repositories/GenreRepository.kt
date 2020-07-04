@@ -27,11 +27,8 @@ class GenreRepository(
                 }.genres
             }
         } else {
-            return when (val cacheResult = inMemoryCache.get(GenreResponse::class)) {
-                is CacheResult.CacheHit -> {
-                    cacheResult.result.genres
-                }
-                is CacheResult.CacheMiss, is CacheResult.CacheError -> {
+            return inMemoryCache.get<GenreResponse>(GenreResponse::class)?.let { it.genres }
+                ?: kotlin.run {
                     withContext(Dispatchers.IO) {
                         when (val diskCacheResult = diskCache.readFile(GenreResponse::class)) {
                             is CacheResult.CacheHit -> {
@@ -52,12 +49,11 @@ class GenreRepository(
                                         }.genres
                                     }
                                 }
-
                             }
                         }
                     }
                 }
-            }
+
         }
     }
 }
