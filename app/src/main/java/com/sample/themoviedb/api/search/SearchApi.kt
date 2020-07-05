@@ -1,6 +1,5 @@
 package com.sample.themoviedb.api.search
 
-
 import retrofit2.http.GET
 import retrofit2.http.Query
 

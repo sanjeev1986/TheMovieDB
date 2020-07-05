@@ -2,16 +2,14 @@ package com.sample.themoviedb
 
 import android.app.Application
 import android.content.Context
-import android.os.StrictMode
-import android.os.StrictMode.VmPolicy
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.sample.themoviedb.api.ApiManager
 import com.sample.themoviedb.common.AppViewModerFactory
-import com.sample.themoviedb.utils.network.HttpStack
 import com.sample.themoviedb.platform.PlatformManager
 import com.sample.themoviedb.storage.StorageManager
+import com.sample.themoviedb.utils.network.HttpStack
 import timber.log.Timber
 
 /**
@@ -30,7 +28,7 @@ class TheMovieDbApp : Application() {
     }
 
     override fun onCreate() {
-        if (BuildConfig.DEBUG) {//
+        if (BuildConfig.DEBUG) { //
             /* StrictMode.setThreadPolicy(
                  StrictMode.ThreadPolicy.Builder()
                      .detectAll()
@@ -45,7 +43,6 @@ class TheMovieDbApp : Application() {
             Timber.plant(Timber.DebugTree())
         }
         super.onCreate()
-
     }
 
     /**
@@ -78,6 +75,4 @@ class TheMovieDbApp : Application() {
     val platformManager = PlatformManager(this)
 
     val gson = Gson()
-
-
 }

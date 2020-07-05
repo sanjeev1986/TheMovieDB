@@ -28,7 +28,7 @@ class MovieDetailsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         val safeArgs: MovieDetailsFragmentArgs by navArgs()
         val movie = safeArgs.movie
-        movieImage?.run { backdropImgView.loadImage(movie.posterPath!!) } ?: run {
+        movieImage?.run { backdropImgView.loadImage(movie.backdropPath!!) } ?: run {
             backdropImgView.scaleType = ImageView.ScaleType.CENTER_INSIDE
             backdropImgView.setImageResource(R.drawable.ic_baseline_photo_24px)
         }
@@ -37,7 +37,5 @@ class MovieDetailsFragment : BaseFragment() {
 
         titleTxtView.text = movie.title
         overviewTxtView.text = movie.overview
-
     }
-
 }

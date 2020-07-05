@@ -29,7 +29,6 @@ class TrendingFragment : BaseFragment() {
         ).get(TrendingViewModel::class.java)
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,19 +54,22 @@ class TrendingFragment : BaseFragment() {
         swipeRefreshLayout.setOnRefreshListener {
             viewModel.refresh()
         }
-        viewModel.resultsLiveData.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is ViewModelResult.Success -> {
-                    swipeRefreshLayout.isRefreshing = false
-                    movieAdapter.items = it.result
-                    movieAdapter.notifyDataSetChanged()
-                }
-                is ViewModelResult.Failure -> {
-                    swipeRefreshLayout.isRefreshing = false
-                    displayError("Error", "dismiss", null)
+        viewModel.resultsLiveData.observe(
+            viewLifecycleOwner,
+            Observer {
+                when (it) {
+                    is ViewModelResult.Success -> {
+                        swipeRefreshLayout.isRefreshing = false
+                        movieAdapter.items = it.result
+                        movieAdapter.notifyDataSetChanged()
+                    }
+                    is ViewModelResult.Failure -> {
+                        swipeRefreshLayout.isRefreshing = false
+                        displayError("Error", "dismiss", null)
+                    }
                 }
             }
-        })
+        )
         viewModel.refresh()
     }
 

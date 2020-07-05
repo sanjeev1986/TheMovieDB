@@ -9,11 +9,17 @@ import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.google.gson.JsonSyntaxException
 import com.sample.themoviedb.storage.CacheResult
-import java.io.*
+import java.io.BufferedOutputStream
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.io.OutputStream
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 import kotlin.reflect.KClass
-
 
 class DiskCache(private val context: Context, private val gson: Gson) {
     companion object {
@@ -29,14 +35,18 @@ class DiskCache(private val context: Context, private val gson: Gson) {
         try {
             val fileDir =
                 File(
-                    ((if (isCachedir) File(context.cacheDir, DIR) else File(
-                        context.filesDir,
-                        DIR
-                    )).also {
-                        if (!it.exists()) {
-                            it.mkdir()
-                        }
-                    }),
+                    (
+                            (
+                                    if (isCachedir) File(context.cacheDir, DIR) else File(
+                                        context.filesDir,
+                                        DIR
+                                    )
+                                    ).also {
+                                    if (!it.exists()) {
+                                        it.mkdir()
+                                    }
+                                }
+                            ),
                     filename.java.simpleName
                 )
             if (fileDir.exists()) {
@@ -60,7 +70,6 @@ class DiskCache(private val context: Context, private val gson: Gson) {
         return CacheResult.CacheHit(data)
     }
 
-
     fun <T : Parcelable> readFile(
         cls: KClass<T>,
         isCachedir: Boolean = true
@@ -83,7 +92,6 @@ class DiskCache(private val context: Context, private val gson: Gson) {
             return CacheResult.CacheMiss
         } catch (e: JsonSyntaxException) {
             return CacheResult.CacheError(InvalidJsonInput(e))
-
         } catch (e: JsonParseException) {
             return CacheResult.CacheError(ParseFailure(e))
         } catch (e: Exception) {
@@ -114,7 +122,6 @@ class DiskCache(private val context: Context, private val gson: Gson) {
         }
         return false
     }
-
 
     data class UnknownFileIOError(val e: Throwable) : Throwable(e)
     data class InvalidJsonInput(val e: Throwable) :

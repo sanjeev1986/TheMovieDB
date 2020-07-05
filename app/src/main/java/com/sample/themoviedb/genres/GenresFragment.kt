@@ -1,7 +1,11 @@
 package com.sample.themoviedb.genres
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.CheckedTextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -18,7 +22,7 @@ import com.sample.themoviedb.common.BaseFragment
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.ui.GridItemDecoration
 
-class GenresFragment : BaseFragment(){
+class GenresFragment : BaseFragment() {
 
     private val listOfSelectedGenres = mutableSetOf<Genre>()
     private lateinit var genreGridView: RecyclerView
@@ -52,23 +56,25 @@ class GenresFragment : BaseFragment(){
         }
         activity?.run {
             viewModel.selectedGenres.value?.forEach { listOfSelectedGenres.add(it) }
-            viewModel.genresLiveData.observe(viewLifecycleOwner, Observer {
-                when (it) {
-                    is ViewModelResult.Success -> {
-                        genreGridView.adapter = GenreGridAdapter(it.result)
-                    }
-                    is ViewModelResult.Failure -> {
-                        it.fallback?.run { genreGridView.adapter = GenreGridAdapter(this) }
-                        (requireActivity() as BaseActivity).prepareErrorSnackBar(
-                             getString(R.string.no_network),
-                            "REFRESH"
-                        ) {
-                            viewModel.fetchGenres()
-                        }.show()
+            viewModel.genresLiveData.observe(
+                viewLifecycleOwner,
+                Observer {
+                    when (it) {
+                        is ViewModelResult.Success -> {
+                            genreGridView.adapter = GenreGridAdapter(it.result)
+                        }
+                        is ViewModelResult.Failure -> {
+                            it.fallback?.run { genreGridView.adapter = GenreGridAdapter(this) }
+                            (requireActivity() as BaseActivity).prepareErrorSnackBar(
+                                getString(R.string.no_network),
+                                "REFRESH"
+                            ) {
+                                viewModel.fetchGenres()
+                            }.show()
+                        }
                     }
                 }
-
-            })
+            )
             viewModel.fetchGenres()
         }
         setHasOptionsMenu(true)
@@ -110,7 +116,6 @@ class GenresFragment : BaseFragment(){
 
         override fun onBindViewHolder(holder: GenreViewHolder, position: Int) =
             holder.bind(listOfGenre[position])
-
     }
 
     private inner class GenreViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {

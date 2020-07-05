@@ -35,11 +35,9 @@ class TrendingViewModel(
                 }
                 _resultsLiveData.value =
                     ViewModelResult.Success(response.results ?: emptyList())
-
             } catch (e: Exception) {
                 _resultsLiveData.value = ViewModelResult.Failure(e)
             }
-
         }
     }
 }

@@ -7,7 +7,6 @@ import com.sample.themoviedb.R
 import com.sample.themoviedb.common.BaseActivity
 import com.sample.themoviedb.common.BaseFragment
 
-
 fun ImageView.loadImage(path: String) {
     val cropOptions = RequestOptions()
         .placeholder(R.drawable.ic_baseline_photo_24px)
@@ -16,7 +15,6 @@ fun ImageView.loadImage(path: String) {
     Glide.with(this)
         .load("https://image.tmdb.org/t/p/w1280/$path")
         .apply(cropOptions)
-        .centerCrop()
         .into(this)
 }
 

@@ -1,8 +1,8 @@
 package com.sample.themoviedb.api.search
 
-import com.sample.themoviedb.api.Movie
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.sample.themoviedb.api.Movie
 
 data class SearchResponse(
 
