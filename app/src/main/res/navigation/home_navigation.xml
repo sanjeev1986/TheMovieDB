@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/home_navigation"
+        app:startDestination="@+id/home_discover">
+
+    <fragment
+            android:id="@+id/home_discover"
+            android:name="com.sample.themoviedb.discover.DiscoverFragment"
+            android:label="@string/discover"
+            tools:layout="@layout/fragment_generic_home">
+        <action
+                android:id="@+id/action_home_discover_to_action_search"
+                app:destination="@id/action_search"
+                app:enterAnim="@anim/fragment_fade_enter"
+                app:exitAnim="@anim/fragment_fade_exit"
+                app:popEnterAnim="@anim/fragment_close_enter"
+                app:popExitAnim="@anim/fragment_close_exit" />
+        <action
+                android:id="@+id/action_home_discover_to_movieDetailsFragment"
+                app:destination="@id/movieDetailsFragment" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/home_intheatres"
+            android:name="com.sample.themoviedb.intheatres.InTheatresFragment"
+            android:label="@string/intheatres"
+            tools:layout="@layout/fragment_generic_home">
+        <action
+                android:id="@+id/action_home_intheatres_to_action_search"
+                app:destination="@id/action_search" />
+        <action
+                android:id="@+id/action_home_intheatres_to_movieDetailsFragment"
+                app:destination="@id/movieDetailsFragment"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+            android:id="@+id/home_trending"
+            android:name="com.sample.themoviedb.trending.TrendingFragment"
+            android:label="@string/trending"
+            tools:layout="@layout/fragment_generic_home">
+        <action
+                android:id="@+id/action_home_trending_to_action_search"
+                app:destination="@id/action_search" />
+        <action
+                android:id="@+id/action_home_trending_to_movieDetailsFragment"
+                app:destination="@id/movieDetailsFragment"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+            android:id="@+id/action_search"
+            android:name="com.sample.themoviedb.search.SearchFragment"
+            android:label="SearchFragment">
+        <action
+                android:id="@+id/action_action_search_to_movieDetailsFragment"
+                app:destination="@id/movieDetailsFragment"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+            android:id="@+id/movieDetailsFragment"
+            android:name="com.sample.themoviedb.details.MovieDetailsFragment"
+            android:label="MovieDetailsFragment">
+        <argument
+                android:name="movie"
+                app:argType="com.sample.themoviedb.api.Movie" />
+    </fragment>
+
+</navigation>
