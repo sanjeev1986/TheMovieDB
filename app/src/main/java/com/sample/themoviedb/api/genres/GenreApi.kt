@@ -16,10 +16,10 @@ data class Genre(
 
     @SerializedName("id")
     @Expose
-    var id: Int = 0,
+    val id: Int,
     @SerializedName("name")
     @Expose
-    var name: String? = null
+    val name: String
 
 ) : Parcelable
 

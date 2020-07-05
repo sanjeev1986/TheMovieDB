@@ -8,6 +8,7 @@ import com.sample.themoviedb.api.trending.TrendingApi
 import com.sample.themoviedb.utils.network.HttpStack
 
 class ApiManager(private val httpStack: HttpStack) {
+
     val movieApi by lazy(LazyThreadSafetyMode.NONE) { httpStack.retrofit.create(MovieApi::class.java) }
 
     val searchApi by lazy(LazyThreadSafetyMode.NONE) { httpStack.retrofit.create(SearchApi::class.java) }

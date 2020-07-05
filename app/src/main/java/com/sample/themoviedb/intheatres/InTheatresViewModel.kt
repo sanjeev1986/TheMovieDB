@@ -22,7 +22,7 @@ class InTheatresViewModel(
         get() = _resultsLiveData
 
     fun refresh() {
-        inMemoryCache.get<List<Movie>>(InTheatresViewModel::class)?.apply {
+        inMemoryCache.get<List<Movie>>(InTheatresViewModel::class.simpleName!!)?.apply {
             _resultsLiveData.value =
                 ViewModelResult.Success(this)
         } ?: viewModelScope.launch {
@@ -31,14 +31,12 @@ class InTheatresViewModel(
                     api.fetchNowInTheatres(1, "NL", null)
                 }
                 response.results?.apply {
-                    inMemoryCache.put(InTheatresViewModel::class, this)
+                    inMemoryCache.put(InTheatresViewModel::class.simpleName!!, this)
                 }
                 _resultsLiveData.value = ViewModelResult.Success(response.results ?: emptyList())
-
             } catch (e: Exception) {
                 _resultsLiveData.value = ViewModelResult.Failure(e)
             }
-
         }
     }
 }

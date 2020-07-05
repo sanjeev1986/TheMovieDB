@@ -1,5 +1,6 @@
 package com.sample.themoviedb.utils.network
 
+import com.google.gson.Gson
 import com.sample.themoviedb.BuildConfig
 import okhttp3.Cache
 import okhttp3.Interceptor
@@ -16,7 +17,8 @@ import java.util.concurrent.TimeUnit
  */
 class HttpStack(
     private val baseUrl: String,
-    private val cacheDir: File
+    private val cacheDir: File,
+    private val gson: Gson
 ) {
     private val networkInterceptors: MutableList<Interceptor> =
         mutableListOf(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
@@ -47,7 +49,7 @@ class HttpStack(
         retrofitBuilder
             .baseUrl(baseUrl)
             .client(okhttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 }
