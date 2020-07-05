@@ -155,4 +155,5 @@ interface TrendingApi {
         @Expose
         val id: Int? = null
     ) : Parcelable
+
 }

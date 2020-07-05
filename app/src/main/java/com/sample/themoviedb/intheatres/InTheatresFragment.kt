@@ -30,6 +30,7 @@ class InTheatresFragment : BaseFragment() {
         ).get(InTheatresViewModel::class.java)
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,22 +56,19 @@ class InTheatresFragment : BaseFragment() {
         view.findViewById<Chip>(R.id.more).setOnClickListener {
             findNavController().navigate(InTheatresFragmentDirections.actionHomeIntheatresToActionSearch())
         }
-        viewModel.resultsLiveData.observe(
-            viewLifecycleOwner,
-            Observer {
-                when (it) {
-                    is ViewModelResult.Success -> {
-                        swipeRefreshLayout.isRefreshing = false
-                        movieAdapter.items = it.result
-                        movieAdapter.notifyDataSetChanged()
-                    }
-                    is ViewModelResult.Failure -> {
-                        swipeRefreshLayout.isRefreshing = false
-                        displayError("Error", "dismiss", null)
-                    }
+        viewModel.resultsLiveData.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is ViewModelResult.Success -> {
+                    swipeRefreshLayout.isRefreshing = false
+                    movieAdapter.items = it.result
+                    movieAdapter.notifyDataSetChanged()
+                }
+                is ViewModelResult.Failure -> {
+                    swipeRefreshLayout.isRefreshing = false
+                    displayError("Error", "dismiss", null)
                 }
             }
-        )
+        })
         viewModel.refresh()
     }
 
@@ -109,4 +107,5 @@ class InTheatresFragment : BaseFragment() {
             }
         }
     }
+
 }

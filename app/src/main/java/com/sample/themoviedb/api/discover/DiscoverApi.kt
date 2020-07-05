@@ -156,4 +156,5 @@ interface DiscoverApi {
         @Expose
         val id: Int? = null
     ) : Parcelable
+
 }

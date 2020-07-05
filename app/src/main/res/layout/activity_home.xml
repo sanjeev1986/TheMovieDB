@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         android:orientation="vertical"
-        tools:context=".MovieBrowserActivity">
+        tools:context=".browse.MovieBrowserActivity">
 
     <fragment
             android:id="@+id/my_nav_host_fragment"

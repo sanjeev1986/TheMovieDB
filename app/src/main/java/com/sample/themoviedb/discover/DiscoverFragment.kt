@@ -21,6 +21,7 @@ import com.sample.themoviedb.common.BaseFragment
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.ui.loadImage
 
+
 class DiscoverFragment : BaseFragment() {
 
     private val viewModel by lazy {
@@ -29,6 +30,7 @@ class DiscoverFragment : BaseFragment() {
             TheMovieDbApp.getInstance(requireContext()).appViewModerFactory.buildDiscoverViewModelFactory()
         ).get(DiscoverViewModel::class.java)
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,22 +57,19 @@ class DiscoverFragment : BaseFragment() {
             adapter = movieAdapter
             layoutManager = GridLayoutManager(context, 2)
         }
-        viewModel.resultsLiveData.observe(
-            viewLifecycleOwner,
-            Observer {
-                when (it) {
-                    is ViewModelResult.Success -> {
-                        swipeRefreshLayout.isRefreshing = false
-                        movieAdapter.items = it.result
-                        movieAdapter.notifyDataSetChanged()
-                    }
-                    is ViewModelResult.Failure -> {
-                        swipeRefreshLayout.isRefreshing = false
-                        displayError("Error", "dismiss", null)
-                    }
+        viewModel.resultsLiveData.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is ViewModelResult.Success -> {
+                    swipeRefreshLayout.isRefreshing = false
+                    movieAdapter.items = it.result
+                    movieAdapter.notifyDataSetChanged()
+                }
+                is ViewModelResult.Failure -> {
+                    swipeRefreshLayout.isRefreshing = false
+                    displayError("Error", "dismiss", null)
                 }
             }
-        )
+        })
         viewModel.refresh()
     }
 
@@ -109,4 +108,5 @@ class DiscoverFragment : BaseFragment() {
             }
         }
     }
+
 }
