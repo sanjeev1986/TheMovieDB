@@ -16,13 +16,6 @@
                 app:layout_constraintDimensionRatio="W,9:16"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbarDetails"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_constraintTop_toTopOf="parent"
-                android:background="@drawable/gradient_movie_title_toolbar"/>
-
         <TextView
                 android:id="@+id/titleTxtView"
                 android:layout_width="match_parent"

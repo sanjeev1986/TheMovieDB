@@ -22,7 +22,7 @@ class GenresFragmentTest {
     fun setup() {
         AppViewModerFactory.setInstance(GenresViewModel::class, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return GenresViewModel(genreRepository) as T
+                return GenresViewModel(genreRepository, mockk()) as T
             }
         })
 

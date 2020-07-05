@@ -26,12 +26,12 @@
             </intent-filter>
         </activity>
         <activity
-                android:name="com.sample.themoviedb.details.MovieDetailsActivity"
+                android:name="com.sample.themoviedb.details.MovieDetailsFragment"
                 android:parentActivityName="com.sample.themoviedb.browse.MovieBrowserActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-                android:name=".search.SearchActivity"
+                android:name=".search.SearchFragment"
                 android:parentActivityName="com.sample.themoviedb.browse.MovieBrowserActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme" />

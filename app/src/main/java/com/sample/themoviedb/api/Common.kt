@@ -52,9 +52,3 @@ data class Movie(
     var releaseDate: String? = null
 
 ) : Parcelable
-
-
-interface UseCase<A, B> {
-    operator  fun invoke(a: A): B
-
-}
