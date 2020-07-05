@@ -21,8 +21,9 @@ import com.sample.themoviedb.R
 import com.sample.themoviedb.api.movies.MovieApi
 import com.sample.themoviedb.common.AppViewModerFactory
 import com.sample.themoviedb.genres.GenresViewModel
+import com.sample.themoviedb.intheatres.InTheatresViewModel
 import com.sample.themoviedb.repositories.GenreRepository
-import com.sample.themoviedb.search.SearchActivity
+import com.sample.themoviedb.search.SearchFragment
 import io.mockk.mockk
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.instanceOf
@@ -45,12 +46,12 @@ class MovieBrowserActivityTest {
             InTheatresViewModel::class,
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                    return InTheatresViewModel(movieApi) as T
+                    return InTheatresViewModel(mockk(), movieApi) as T
                 }
             })
         AppViewModerFactory.setInstance(GenresViewModel::class, object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return GenresViewModel(genreApi) as T
+                return GenresViewModel(genreApi, mockk()) as T
             }
         })
         scenari = launchActivity()
@@ -85,7 +86,7 @@ class MovieBrowserActivityTest {
             hasComponent(
                 ComponentName(
                     getApplicationContext(),
-                    SearchActivity::class.java
+                    SearchFragment::class.java
                 )
             )
         )
