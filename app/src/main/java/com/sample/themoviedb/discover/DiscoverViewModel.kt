@@ -22,7 +22,7 @@ class DiscoverViewModel(
         get() = _resultsLiveData
 
     fun refresh() {
-        inMemoryCache.get<List<Movie>>(DiscoverViewModel::class)?.apply {
+        inMemoryCache.get<List<Movie>>(DiscoverViewModel::class.simpleName!!)?.apply {
             _resultsLiveData.value =
                 ViewModelResult.Success(this)
         } ?: viewModelScope.launch {
@@ -31,15 +31,13 @@ class DiscoverViewModel(
                     discoverApi.discover(1, "NL", null)
                 }
                 response.results?.apply {
-                    inMemoryCache.put(DiscoverViewModel::class, this)
+                    inMemoryCache.put(DiscoverViewModel::class.simpleName!!, this)
                 }
                 _resultsLiveData.value =
                     ViewModelResult.Success(response.results ?: emptyList())
-
             } catch (e: Exception) {
                 _resultsLiveData.value = ViewModelResult.Failure(e)
             }
-
         }
     }
 }

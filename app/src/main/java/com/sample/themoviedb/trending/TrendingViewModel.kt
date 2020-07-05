@@ -22,7 +22,7 @@ class TrendingViewModel(
         get() = _resultsLiveData
 
     fun refresh() {
-        inMemoryCache.get<List<Movie>>(TrendingViewModel::class)?.apply {
+        inMemoryCache.get<List<Movie>>(TrendingViewModel::class.simpleName!!)?.apply {
             _resultsLiveData.value =
                 ViewModelResult.Success(this)
         } ?: viewModelScope.launch {
@@ -31,15 +31,13 @@ class TrendingViewModel(
                     api.getTrending()
                 }
                 response.results?.apply {
-                    inMemoryCache.put(TrendingViewModel::class, this)
+                    inMemoryCache.put(TrendingViewModel::class.simpleName!!, this)
                 }
                 _resultsLiveData.value =
                     ViewModelResult.Success(response.results ?: emptyList())
-
             } catch (e: Exception) {
                 _resultsLiveData.value = ViewModelResult.Failure(e)
             }
-
         }
     }
 }

@@ -11,8 +11,9 @@
             android:layout_width="match_parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_height="0px"
-            android:scaleType="center"
-            app:layout_constraintDimensionRatio="W,1.5:1"/>
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_baseline_photo_24px"
+            app:layout_constraintDimensionRatio="W,1.5:1" />
     <TextView
             android:id="@+id/titleTxtView"
             android:layout_width="match_parent"

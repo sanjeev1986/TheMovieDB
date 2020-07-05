@@ -22,18 +22,19 @@ class GenreRepository(
         return if (refreshCache) {
             withContext(Dispatchers.IO) {
                 genreApi.fetchGenres().apply {
-                    inMemoryCache.put(GenreResponse::class, this)
+                    inMemoryCache.put(GenreResponse::class.simpleName!!, this)
                     diskCache.saveFile(GenreResponse::class, this)
                 }.genres
             }
         } else {
-            return inMemoryCache.get<GenreResponse>(GenreResponse::class)?.let { it.genres }
+            return inMemoryCache.get<GenreResponse>(GenreResponse::class.simpleName!!)
+                ?.let { it.genres }
                 ?: kotlin.run {
                     withContext(Dispatchers.IO) {
                         when (val diskCacheResult = diskCache.readFile(GenreResponse::class)) {
                             is CacheResult.CacheHit -> {
                                 inMemoryCache.put(
-                                    GenreResponse::class,
+                                    GenreResponse::class.simpleName!!,
                                     diskCacheResult.result
                                 ).genres
                             }
@@ -44,7 +45,10 @@ class GenreRepository(
                                     }
                                     else -> {
                                         genreApi.fetchGenres().apply {
-                                            inMemoryCache.put(GenreResponse::class, this)
+                                            inMemoryCache.put(
+                                                GenreResponse::class.simpleName!!,
+                                                this
+                                            )
                                             diskCache.saveFile(GenreResponse::class, this)
                                         }.genres
                                     }
@@ -53,7 +57,6 @@ class GenreRepository(
                         }
                     }
                 }
-
         }
     }
 }

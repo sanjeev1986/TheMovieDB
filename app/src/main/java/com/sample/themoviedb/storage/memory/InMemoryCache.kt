@@ -5,7 +5,6 @@ package com.sample.themoviedb.storage.memory
 import android.content.ComponentCallbacks2
 import android.content.res.Configuration
 import android.util.LruCache
-import kotlin.reflect.KClass
 
 class InMemoryCache(size: Int = 1 * 1024 * 1024/* Default 1 MB cache*/) : ComponentCallbacks2 {
     override fun onLowMemory() {
@@ -20,9 +19,9 @@ class InMemoryCache(size: Int = 1 * 1024 * 1024/* Default 1 MB cache*/) : Compon
         }
     }
 
-    private val memoryCache = LruCache<KClass<*>, Any?>(size)
+    private val memoryCache = LruCache<String, Any?>(size)
 
-    fun <T : Any> get(key: KClass<*>): T? {
+    operator fun <T : Any> get(key: String): T? {
         val data = memoryCache[key]
         return try {
             data as T?
@@ -31,12 +30,12 @@ class InMemoryCache(size: Int = 1 * 1024 * 1024/* Default 1 MB cache*/) : Compon
         }
     }
 
-    fun <T : Any> put(key: KClass<*>, data: T): T {
+    fun <T : Any> put(key: String, data: T): T {
         memoryCache.put(key, data)
         return data
     }
 
-    fun <T : Any> remove(key: KClass<*>): T? {
+    fun <T : Any> remove(key: String): T? {
         val data = memoryCache.remove(key)
         return try {
             data as T?

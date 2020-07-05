@@ -26,7 +26,6 @@ import com.sample.themoviedb.utils.ui.loadImage
 import kotlinx.android.synthetic.main.fragment_search.*
 import timber.log.Timber
 
-
 class SearchFragment : BaseFragment(), TextWatcher {
 
     private val searchViewModel by lazy {
@@ -51,50 +50,55 @@ class SearchFragment : BaseFragment(), TextWatcher {
         }
         view.findViewById<AppCompatEditText>(R.id.searchQueryEtTxt).apply {
             addTextChangedListener(this@SearchFragment)
-            setOnEditorActionListener(OnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    return@OnEditorActionListener true
+            setOnEditorActionListener(
+                OnEditorActionListener { _, actionId, _ ->
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        return@OnEditorActionListener true
+                    }
+                    false
                 }
-                false
-            })
+            )
         }
         val movieAdapter = MovieListAdapter()
         searchList.apply {
             adapter = movieAdapter
             layoutManager = GridLayoutManager(context, 2)
         }
-        searchViewModel.resultsLiveData.observe(viewLifecycleOwner, Observer {
-            Timber.d(it.toString())
-            when (it) {
+        searchViewModel.resultsLiveData.observe(
+            viewLifecycleOwner,
+            Observer {
+                Timber.d(it.toString())
+                when (it) {
 
-                is ViewModelResult.Progress -> {
-                }
-                is ViewModelResult.Success -> {
-                    if (it.result.isEmpty()) {
+                    is ViewModelResult.Progress -> {
+                    }
+                    is ViewModelResult.Success -> {
+                        if (it.result.isEmpty()) {
+                            view.findViewById<LottieAnimationView>(R.id.animation_view).apply {
+                                visibility = View.VISIBLE
+                                playAnimation()
+                            }
+                            view.findViewById<RecyclerView>(R.id.searchList).visibility =
+                                View.INVISIBLE
+                        } else {
+                            view.findViewById<LottieAnimationView>(R.id.animation_view).visibility =
+                                View.INVISIBLE
+                            view.findViewById<RecyclerView>(R.id.searchList).visibility =
+                                View.VISIBLE
+                            movieAdapter.submitList(it.result)
+                        }
+                    }
+                    is ViewModelResult.Failure -> {
+                        movieAdapter.submitList(null)
+                        view.findViewById<RecyclerView>(R.id.searchList).visibility = View.INVISIBLE
                         view.findViewById<LottieAnimationView>(R.id.animation_view).apply {
                             visibility = View.VISIBLE
                             playAnimation()
                         }
-                        view.findViewById<RecyclerView>(R.id.searchList).visibility = View.INVISIBLE
-                    } else {
-                        view.findViewById<LottieAnimationView>(R.id.animation_view).visibility =
-                            View.INVISIBLE
-                        view.findViewById<RecyclerView>(R.id.searchList).visibility = View.VISIBLE
-                        movieAdapter.submitList(it.result)
                     }
-
-                }
-                is ViewModelResult.Failure -> {
-                    movieAdapter.submitList(null)
-                    view.findViewById<RecyclerView>(R.id.searchList).visibility = View.INVISIBLE
-                    view.findViewById<LottieAnimationView>(R.id.animation_view).apply {
-                        visibility = View.VISIBLE
-                        playAnimation()
-                    }
-
                 }
             }
-        })
+        )
     }
 
     val diffUtil: DiffUtil.ItemCallback<Movie> =
@@ -133,11 +137,10 @@ class SearchFragment : BaseFragment(), TextWatcher {
                 posterPath?.apply { movieImage.loadImage(this) }
             }
             view.setOnClickListener {
-                //onClick(movieImage, movie)
+                // onClick(movieImage, movie)
             }
         }
     }
-
 
     /* fun onClick(movieImage: ImageView, movie: Movie) {
          val intent = Intent(this, MovieDetailsActivity::class.java)
@@ -163,5 +166,4 @@ class SearchFragment : BaseFragment(), TextWatcher {
         s?.trim()
             ?.run { searchViewModel.search(toString()) }
     }
-
 }
