@@ -25,7 +25,6 @@ class GenresViewModel(
 
     val selectedGenres = MutableLiveData<Set<Genre>>()
 
-
     fun fetchGenres() {
         viewModelScope.launch {
             try {

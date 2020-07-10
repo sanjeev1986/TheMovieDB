@@ -15,7 +15,7 @@
             android:supportsRtl="true"
             tools:ignore="GoogleAppIndexingWarning">
         <activity
-                android:name="com.sample.themoviedb.browse.MovieBrowserActivity"
+                android:name="com.sample.themoviedb.MovieBrowserActivity"
                 android:launchMode="singleTop"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme">
@@ -25,16 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-                android:name="com.sample.themoviedb.details.MovieDetailsFragment"
-                android:parentActivityName="com.sample.themoviedb.browse.MovieBrowserActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity
-                android:name=".search.SearchFragment"
-                android:parentActivityName="com.sample.themoviedb.browse.MovieBrowserActivity"
-                android:screenOrientation="portrait"
-                android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

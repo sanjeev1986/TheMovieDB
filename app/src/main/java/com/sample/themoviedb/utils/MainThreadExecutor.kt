@@ -14,5 +14,4 @@ class MainThreadExecutor : Executor {
     override fun execute(command: Runnable) {
         mHandler.post(command)
     }
-
 }

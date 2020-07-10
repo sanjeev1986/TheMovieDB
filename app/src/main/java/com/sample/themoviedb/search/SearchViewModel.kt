@@ -14,7 +14,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 /**
@@ -28,12 +32,12 @@ class SearchViewModel(searchApi: SearchApi) : ViewModel() {
     }
 
     private val _resultsLiveData =
-        MediatorLiveData<ViewModelResult<PagedList<Movie>, Throwable>>()//TODO why use mediator
+        MediatorLiveData<ViewModelResult<PagedList<Movie>, Throwable>>() // TODO why use mediator
     val resultsLiveData: LiveData<ViewModelResult<PagedList<Movie>, Throwable>> = _resultsLiveData
 
     private var _search: LiveData<PagedList<Movie>>? = null
 
-    @UseExperimental(FlowPreview::class)
+    @OptIn(FlowPreview::class)
     private val queryChannel by lazy(LazyThreadSafetyMode.NONE) {
         BroadcastChannel<String>(Channel.CONFLATED).apply {
             this@apply.asFlow()
@@ -53,7 +57,8 @@ class SearchViewModel(searchApi: SearchApi) : ViewModel() {
                                     _resultsLiveData.value = ViewModelResult.Failure(error)
                                 },
                                 { _resultsLiveData.value = ViewModelResult.Progress }
-                            ), PagedList.Config.Builder()
+                            ),
+                            PagedList.Config.Builder()
                                 .setEnablePlaceholders(false)
                                 .setPageSize(20)
                                 .setPrefetchDistance(20)
@@ -67,7 +72,6 @@ class SearchViewModel(searchApi: SearchApi) : ViewModel() {
                             }
                     }
                 }.launchIn(viewModelScope)
-
         }
     }
 

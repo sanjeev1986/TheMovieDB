@@ -3,7 +3,6 @@ package com.sample.themoviedb.common
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sample.themoviedb.api.ApiManager
-import com.sample.themoviedb.browse.BrowseViewModel
 import com.sample.themoviedb.discover.DiscoverViewModel
 import com.sample.themoviedb.genres.GenresViewModel
 import com.sample.themoviedb.intheatres.InTheatresViewModel
@@ -24,7 +23,6 @@ class AppViewModerFactory(
     private val storageManager: StorageManager // not used but added to demonstrate app pattern scalability and ease of extension
 ) {
 
-
     companion object {
         private var testInstanceMap = mutableMapOf<KClass<*>, ViewModelProvider.Factory>()
 
@@ -36,17 +34,9 @@ class AppViewModerFactory(
         }
     }
 
-    fun buildBrowseMoviesViewModelFactory(): ViewModelProvider.Factory =
-        testInstanceMap.remove(BrowseViewModel::class) ?: object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return BrowseViewModel(
-                    apiManager.movieApi
-                ) as T
-            }
-        }
 
     fun buildInTheatresViewModelFactory(): ViewModelProvider.Factory =
-        testInstanceMap.remove(BrowseViewModel::class) ?: object : ViewModelProvider.Factory {
+        testInstanceMap.remove(InTheatresViewModel::class) ?: object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return InTheatresViewModel(
                     storageManager.memoryCache,
@@ -56,7 +46,7 @@ class AppViewModerFactory(
         }
 
     fun buildTrendingViewModelFactory(): ViewModelProvider.Factory =
-        testInstanceMap.remove(DiscoverViewModel::class) ?: object : ViewModelProvider.Factory {
+        testInstanceMap.remove(TrendingViewModel::class) ?: object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return TrendingViewModel(
                     storageManager.memoryCache,

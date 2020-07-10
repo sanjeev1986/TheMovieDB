@@ -17,5 +17,4 @@ abstract class BaseActivity : AppCompatActivity() {
         .setAction(actionText) {
             onDismiss(it)
         }
-
 }

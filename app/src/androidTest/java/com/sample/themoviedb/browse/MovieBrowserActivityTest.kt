@@ -17,6 +17,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.sample.themoviedb.MovieBrowserActivity
 import com.sample.themoviedb.R
 import com.sample.themoviedb.api.movies.MovieApi
 import com.sample.themoviedb.common.AppViewModerFactory
@@ -31,7 +32,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
 
 @RunWith(AndroidJUnit4::class)
 class MovieBrowserActivityTest {
@@ -48,12 +48,16 @@ class MovieBrowserActivityTest {
                 override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                     return InTheatresViewModel(mockk(), movieApi) as T
                 }
-            })
-        AppViewModerFactory.setInstance(GenresViewModel::class, object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return GenresViewModel(genreApi, mockk()) as T
             }
-        })
+        )
+        AppViewModerFactory.setInstance(
+            GenresViewModel::class,
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                    return GenresViewModel(genreApi, mockk()) as T
+                }
+            }
+        )
         scenari = launchActivity()
     }
 
@@ -91,5 +95,4 @@ class MovieBrowserActivityTest {
             )
         )
     }
-
 }
