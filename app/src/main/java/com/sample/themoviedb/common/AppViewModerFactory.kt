@@ -3,11 +3,12 @@ package com.sample.themoviedb.common
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sample.themoviedb.api.ApiManager
+import com.sample.themoviedb.details.MovieDetailsViewModel
 import com.sample.themoviedb.discover.DiscoverViewModel
 import com.sample.themoviedb.genres.GenresViewModel
 import com.sample.themoviedb.intheatres.InTheatresViewModel
 import com.sample.themoviedb.platform.PlatformManager
-import com.sample.themoviedb.repositories.GenreRepository
+import com.sample.themoviedb.repositories.RepositoryManager
 import com.sample.themoviedb.search.SearchViewModel
 import com.sample.themoviedb.storage.StorageManager
 import com.sample.themoviedb.trending.TrendingViewModel
@@ -19,8 +20,9 @@ import kotlin.reflect.KClass
 @Suppress("UNCHECKED_CAST")
 class AppViewModerFactory(
     private val apiManager: ApiManager,
-    private val platformManager: PlatformManager, // not used but added to demonstrate app pattern scalability and ease of extension
-    private val storageManager: StorageManager // not used but added to demonstrate app pattern scalability and ease of extension
+    private val platformManager: PlatformManager,
+    private val storageManager: StorageManager,
+    private val repositoryManager: RepositoryManager
 ) {
 
     companion object {
@@ -78,13 +80,18 @@ class AppViewModerFactory(
         testInstanceMap.remove(GenresViewModel::class) ?: object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return GenresViewModel(
-                    GenreRepository(
-                        platformManager.networkManager,
-                        storageManager.memoryCache,
-                        storageManager.diskCache,
-                        apiManager.genreApi
-                    ),
+                    repositoryManager.genreRepository,
                     platformManager.networkManager
+                ) as T
+            }
+        }
+
+    fun buildMovieDetailsViewModelFactory(movieId: Int): ViewModelProvider.Factory =
+        testInstanceMap.remove(MovieDetailsViewModel::class) ?: object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return MovieDetailsViewModel(
+                    movieId,
+                    repositoryManager.movieDetailsRepository
                 ) as T
             }
         }

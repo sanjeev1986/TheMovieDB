@@ -8,66 +8,123 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <ImageView
-                android:id="@+id/backdropImgView"
-                android:layout_width="match_parent"
-                android:layout_height="0px"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                app:layout_constraintDimensionRatio="W,9:16"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-                android:id="@+id/titleTxtView"
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cardOne"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/gradient_movie_title"
-                android:fontFamily="@font/roboto_bold"
-                android:textColor="#FFFFFF"
-                android:padding="16dp"
-                android:textSize="24sp"
-                app:layout_constraintBottom_toBottomOf="@+id/backdropImgView" />
+                android:background="#111111"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                    android:id="@+id/backdropImgView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/gradient_movie_title"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_baseline_photo_24px"
+                    app:layout_constraintDimensionRatio="W,9:16"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                    android:id="@+id/titleTxtView"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_bold"
+                    android:gravity="start|center"
+                    android:padding="8dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/movieImage"
+                    app:layout_constraintTop_toBottomOf="@+id/backdropImgView" />
+
+            <ImageView
+                    android:id="@+id/movieImage"
+                    android:layout_width="80dp"
+                    android:layout_height="0px"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:elevation="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_baseline_photo_24px"
+                    app:layout_constraintBottom_toBottomOf="@id/titleTxtView"
+                    app:layout_constraintDimensionRatio="W,1.5:1"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            <Space
+                    android:id="@+id/space"
+                    android:layout_width="8dp"
+                    android:layout_height="0px"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="2dp"
+                    app:layout_constraintBottom_toBottomOf="@id/movieImage"
+                    app:layout_constraintStart_toEndOf="@id/movieImage"
+                    app:layout_constraintTop_toTopOf="@id/movieImage" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
                 android:id="@+id/seperatorOne"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_marginTop="8dp"
                 android:background="#888888"
-                app:layout_constraintTop_toBottomOf="@id/titleTxtView" />
+                app:layout_constraintTop_toBottomOf="@id/cardOne" />
 
-        <ImageView
-                android:id="@+id/movieImage"
-                android:layout_width="120dp"
-                android:layout_height="0px"
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/movieGenreList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                app:layout_constraintDimensionRatio="W,1.5:1"
+                android:overScrollMode="never"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/seperatorOne" />
+                app:layout_constraintTop_toTopOf="@id/seperatorOne" />
 
-        <Space
-                android:id="@+id/space"
-                android:layout_width="8dp"
-                android:layout_height="0px"
-                android:layout_marginLeft="2dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="2dp"
-                app:layout_constraintBottom_toBottomOf="@id/movieImage"
-                app:layout_constraintStart_toEndOf="@id/movieImage"
-                app:layout_constraintTop_toTopOf="@id/movieImage" />
+        <com.google.android.material.chip.Chip
+                android:id="@+id/rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="14sp"
+                app:chipBackgroundColor="@android:color/black"
+                app:chipEndPadding="5dp"
+                app:chipIcon="@drawable/ic_star_rate_24px"
+                app:chipStartPadding="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/movieGenreList" />
+
+        <com.google.android.material.chip.Chip
+                android:id="@+id/ratingCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="14sp"
+                app:chipBackgroundColor="@android:color/black"
+                app:chipEndPadding="5dp"
+                app:chipIcon="@drawable/ic_people_24px"
+                app:chipStartPadding="5dp"
+                app:layout_constraintStart_toEndOf="@id/rating"
+                app:layout_constraintTop_toBottomOf="@id/movieGenreList"
+                app:layout_constraintTop_toTopOf="@id/rating" />
+
 
         <TextView
                 android:id="@+id/overviewTxtView"
-                android:layout_width="0px"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
+                android:layout_margin="16dp"
                 android:fontFamily="@font/roboto_regular"
-                android:padding="8dp"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/space"
-                app:layout_constraintTop_toBottomOf="@id/seperatorOne" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rating" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

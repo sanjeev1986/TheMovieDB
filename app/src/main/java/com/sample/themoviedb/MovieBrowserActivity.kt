@@ -26,14 +26,12 @@ class MovieBrowserActivity : BaseActivity() {
         val navController = host.navController
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_nav_view)
         setupBottomNavMenu(navController)
-        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.action_search, R.id.movieDetailsFragment -> {
-                    // toolbar.visibility = View.GONE
                     bottomNavigationView.visibility = View.GONE
                 }
                 else -> {
-                    // toolbar.visibility = View.VISIBLE
                     bottomNavigationView.visibility = View.VISIBLE
                 }
             }

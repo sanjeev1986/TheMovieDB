@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.sample.themoviedb.api.ApiManager
 import com.sample.themoviedb.common.AppViewModerFactory
 import com.sample.themoviedb.platform.PlatformManager
+import com.sample.themoviedb.repositories.RepositoryManager
 import com.sample.themoviedb.storage.StorageManager
 import com.sample.themoviedb.utils.network.HttpStack
 import timber.log.Timber
@@ -45,34 +46,46 @@ class TheMovieDbApp : Application() {
         super.onCreate()
     }
 
+    private val gson = Gson()
+
     /**
      * Singleton HTTPStack instance
      */
     private val httpStack by lazy(LazyThreadSafetyMode.NONE) {
-        HttpStack(BuildConfig.BASE_URL, cacheDir)
+        HttpStack(BuildConfig.BASE_URL, cacheDir, gson)
     }
 
     /**
      * Singleton storage provider
      */
-    val storageManager by lazy(LazyThreadSafetyMode.NONE) { StorageManager(this, gson) }
+    private val storageManager by lazy(LazyThreadSafetyMode.NONE) { StorageManager(this, gson) }
 
     /**
      * Singleton API Manager
      */
-    val apiManager by lazy(LazyThreadSafetyMode.NONE) { ApiManager(httpStack) }
+    private val apiManager by lazy(LazyThreadSafetyMode.NONE) { ApiManager(httpStack) }
 
     /**
-     * Singleton Viewmodel factory provider
+     * Singleton Repository Manager
      */
-    val appViewModerFactory by lazy {
-        AppViewModerFactory(apiManager, platformManager, storageManager)
+    private val repositoryManager by lazy(LazyThreadSafetyMode.NONE) {
+        RepositoryManager(
+            apiManager,
+            storageManager,
+            platformManager
+        )
     }
 
     /**
      * Singleton platform access
      */
-    val platformManager = PlatformManager(this)
+    private val platformManager = PlatformManager(this)
 
-    val gson = Gson()
+    /**
+     * Singleton Viewmodel factory provider
+     */
+    val appViewModerFactory by lazy {
+        AppViewModerFactory(apiManager, platformManager, storageManager, repositoryManager)
+    }
+
 }
