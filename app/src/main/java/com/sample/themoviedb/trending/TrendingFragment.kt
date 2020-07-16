@@ -1,5 +1,6 @@
 package com.sample.themoviedb.trending
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -20,13 +22,20 @@ import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.common.BaseFragment
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.ui.loadImage
+import javax.inject.Inject
+import javax.inject.Named
 
 class TrendingFragment : BaseFragment() {
-    private val viewModel by lazy {
-        ViewModelProvider(
-            this,
-            TheMovieDbApp.getInstance(requireContext()).appViewModerFactory.buildTrendingViewModelFactory()
-        ).get(TrendingViewModel::class.java)
+
+    @Inject
+    @field:Named("Trending")
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel by viewModels<TrendingViewModel> { viewModelFactory }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        TheMovieDbApp.getInstance(requireContext()).applicationComponent.inject(this)
     }
 
     override fun onCreateView(

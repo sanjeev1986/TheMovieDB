@@ -1,5 +1,6 @@
 package com.sample.themoviedb.details
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +21,9 @@ import com.sample.themoviedb.common.BaseFragment
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.ui.loadImage
 import kotlinx.android.synthetic.main.activity_movie_details.*
+import javax.inject.Inject
+import javax.inject.Named
+
 
 /**
  * Displays Backdrop and Overview of the Image
@@ -26,13 +31,18 @@ import kotlinx.android.synthetic.main.activity_movie_details.*
 class MovieDetailsFragment : BaseFragment() {
 
     private lateinit var movie: MovieDetailsResponse
+    private val safeArgs: MovieDetailsFragmentArgs by navArgs()
 
-    private val viewModel by viewModels<MovieDetailsViewModel> {
-        val safeArgs: MovieDetailsFragmentArgs by navArgs()
-        val movie = safeArgs.movie
-        TheMovieDbApp.getInstance(
-            requireContext()
-        ).appViewModerFactory.buildMovieDetailsViewModelFactory(movie.id)
+    @Inject
+    @field:Named("Details")
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel by viewModels<MovieDetailsViewModel> { viewModelFactory }
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        TheMovieDbApp.getInstance(requireContext()).applicationComponent.inject(this)
     }
 
     override fun onCreateView(
@@ -76,7 +86,7 @@ class MovieDetailsFragment : BaseFragment() {
                 }
             }
         })
-        viewModel.fetchMovieDetails()
+        viewModel.fetchMovieDetails(safeArgs.movie.id)
     }
 
     private inner class GenreListAdapter(private val items: List<String>) :

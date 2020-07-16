@@ -7,8 +7,11 @@ import com.sample.themoviedb.platform.NetworkManager
 import com.sample.themoviedb.storage.memory.InMemoryCache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MovieDetailsRepository(
+@Singleton
+class MovieDetailsRepository @Inject constructor(
     private val networkManager: NetworkManager,
     private val inMemoryCache: InMemoryCache,
     private val movieApi: MovieApi

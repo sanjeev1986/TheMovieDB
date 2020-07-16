@@ -21,7 +21,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.sample.themoviedb.DaggerTestRunner"
     }
     lintOptions {
         abortOnError false
@@ -108,6 +108,12 @@ dependencies {
     implementation 'androidx.paging:paging-common:2.1.1'
     implementation 'androidx.paging:paging-runtime:2.1.1'
 
+    //dagger
+    def dagger_version = "2.28.1"
+    implementation "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
+
     //UI testing
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.1'
@@ -122,5 +128,6 @@ dependencies {
     androidTestImplementation 'io.mockk:mockk-android:1.9.1'
     androidTestImplementation 'androidx.arch.core:core-testing:2.0.0'
     androidTestImplementation 'androidx.arch.core:core-runtime:2.0.0'
+    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:4.8.0'
 
 }

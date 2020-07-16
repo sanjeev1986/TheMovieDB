@@ -10,7 +10,6 @@ import com.sample.themoviedb.repositories.MovieDetailsRepository
 import kotlinx.coroutines.launch
 
 class MovieDetailsViewModel(
-    private val movieID: Int,
     private val movieDetailsRepository: MovieDetailsRepository
 ) : ViewModel() {
 
@@ -19,11 +18,11 @@ class MovieDetailsViewModel(
     val movieDetailsLiveData: LiveData<ViewModelResult<MovieDetailsResponse, Throwable>>
         get() = _movieDetailsLiveData
 
-    fun fetchMovieDetails() {
+    fun fetchMovieDetails(movieId: Int) {
         viewModelScope.launch {
             try {
                 val movieDetails = ViewModelResult.Success(
-                    movieDetailsRepository.fetchMovieDetails(movieID)
+                    movieDetailsRepository.fetchMovieDetails(movieId)
                 )
                 _movieDetailsLiveData.value = movieDetails
             } catch (e: Exception) {

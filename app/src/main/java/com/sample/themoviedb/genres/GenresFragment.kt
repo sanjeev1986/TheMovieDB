@@ -1,5 +1,6 @@
 package com.sample.themoviedb.genres
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -9,8 +10,9 @@ import android.view.ViewGroup
 import android.widget.CheckedTextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -21,6 +23,8 @@ import com.sample.themoviedb.common.BaseActivity
 import com.sample.themoviedb.common.BaseFragment
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.ui.GridItemDecoration
+import javax.inject.Inject
+import javax.inject.Named
 
 class GenresFragment : BaseFragment() {
 
@@ -28,14 +32,17 @@ class GenresFragment : BaseFragment() {
     private lateinit var genreGridView: RecyclerView
     private lateinit var menu: Menu
 
-    private val viewModel by lazy {
-        activity?.let {
-            ViewModelProviders.of(
-                it,
-                TheMovieDbApp.getInstance(it).appViewModerFactory.buildGenreViewModelFactory()
-            ).get(GenresViewModel::class.java)
-        } ?: kotlin.run { throw IllegalStateException("Fragment not attached to activity anymore") }
+    @Inject
+    @field:Named("Genres")
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel by viewModels<GenresViewModel> { viewModelFactory }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        TheMovieDbApp.getInstance(requireContext()).applicationComponent.inject(this)
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,7 +100,9 @@ class GenresFragment : BaseFragment() {
         return if (item.itemId == android.R.id.home) {
             viewModel.selectedGenres.value = listOfSelectedGenres
             activity?.supportFragmentManager?.popBackStack()
-            (requireActivity() as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            (requireActivity() as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(
+                false
+            )
             true
         } else {
             super.onOptionsItemSelected(item)
