@@ -1,5 +1,6 @@
 package com.sample.themoviedb.search
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagedListAdapter
@@ -25,14 +27,20 @@ import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.ui.loadImage
 import kotlinx.android.synthetic.main.fragment_search.*
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Named
 
 class SearchFragment : BaseFragment(), TextWatcher {
 
-    private val searchViewModel by lazy {
-        ViewModelProvider(
-            this,
-            TheMovieDbApp.getInstance(this).appViewModerFactory.buildSearchViewModelFactory()
-        ).get(SearchViewModel::class.java)
+    @Inject
+    @field:Named("Search")
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel by viewModels<SearchViewModel> { viewModelFactory }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        TheMovieDbApp.getInstance(requireContext()).applicationComponent.inject(this)
     }
 
     override fun onCreateView(
@@ -64,7 +72,7 @@ class SearchFragment : BaseFragment(), TextWatcher {
             adapter = movieAdapter
             layoutManager = GridLayoutManager(context, 2)
         }
-        searchViewModel.resultsLiveData.observe(
+        viewModel.resultsLiveData.observe(
             viewLifecycleOwner,
             Observer {
                 Timber.d(it.toString())
@@ -164,6 +172,6 @@ class SearchFragment : BaseFragment(), TextWatcher {
 
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         s?.trim()
-            ?.run { searchViewModel.search(toString()) }
+            ?.run { viewModel.search(toString()) }
     }
 }

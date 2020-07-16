@@ -6,7 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.sample.themoviedb.api.ApiManager
-import com.sample.themoviedb.common.AppViewModerFactory
+import com.sample.themoviedb.di.ApplicationComponent
+import com.sample.themoviedb.di.DaggerApplicationComponent
 import com.sample.themoviedb.platform.PlatformManager
 import com.sample.themoviedb.repositories.RepositoryManager
 import com.sample.themoviedb.storage.StorageManager
@@ -16,7 +17,7 @@ import timber.log.Timber
 /**
  * GetAround app instances is the entry point to access api, storage & platform capabilities
  */
-class TheMovieDbApp : Application() {
+open class TheMovieDbApp : Application() {
     companion object {
         fun getInstance(context: Context): TheMovieDbApp =
             context.applicationContext as TheMovieDbApp
@@ -26,6 +27,10 @@ class TheMovieDbApp : Application() {
 
         fun getInstance(fragment: Fragment): TheMovieDbApp =
             fragment.requireActivity().applicationContext as TheMovieDbApp
+    }
+
+    val applicationComponent: ApplicationComponent by lazy {
+        DaggerApplicationComponent.builder().application(this).context(this).build()
     }
 
     override fun onCreate() {
@@ -80,12 +85,5 @@ class TheMovieDbApp : Application() {
      * Singleton platform access
      */
     private val platformManager = PlatformManager(this)
-
-    /**
-     * Singleton Viewmodel factory provider
-     */
-    val appViewModerFactory by lazy {
-        AppViewModerFactory(apiManager, platformManager, storageManager, repositoryManager)
-    }
 
 }
