@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -102,8 +103,16 @@ class InTheatresFragment : BaseFragment() {
         RecyclerView.ViewHolder(view) {
         private val movieImage = view.findViewById<ImageView>(R.id.movieImage)
         private val movieTitle = view.findViewById<TextView>(R.id.titleTxtView)
+        private val addToWatchList = view.findViewById<CheckBox>(R.id.addToWatchList)
 
         fun bind(movie: Movie) {
+            addToWatchList.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    viewModel.addToWatchList(movie)
+                } else {
+                    viewModel.removeFromWatchList(movie)
+                }
+            }
             with(movie) {
                 posterPath?.apply { movieImage.loadImage(this) }
                 movieTitle.text = title

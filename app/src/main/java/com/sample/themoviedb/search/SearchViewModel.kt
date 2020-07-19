@@ -10,7 +10,9 @@ import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.api.search.SearchApi
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.storage.db.watchlist.WatchListDao
+import com.sample.themoviedb.storage.db.watchlist.WatchListItem
 import com.sample.themoviedb.utils.MainThreadExecutor
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BroadcastChannel
@@ -21,6 +23,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * ViewModel uses a debounce time of 1 second to buffer the rapid typing of the user.
@@ -79,6 +82,36 @@ class SearchViewModel(searchApi: SearchApi, private val watchListDao: WatchListD
     fun search(query: String) {
         viewModelScope.launch {
             queryChannel.offer(query)
+        }
+    }
+
+    fun addToWatchList(movie: Movie) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                watchListDao.insertWatchList(
+                    WatchListItem(
+                        movieId = movie.id,
+                        title = movie.title ?: "Unavailable",
+                        description = movie.overview ?: "Unavailable",
+                        posterPath = movie.posterPath
+                    )
+                )
+            }
+        }
+    }
+
+    fun removeFromWatchList(movie: Movie) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                watchListDao.deleteWatchList(
+                    WatchListItem(
+                        movieId = movie.id,
+                        title = movie.title ?: "Unavailable",
+                        description = movie.overview ?: "Unavailable",
+                        posterPath = movie.posterPath
+                    )
+                )
+            }
         }
     }
 }

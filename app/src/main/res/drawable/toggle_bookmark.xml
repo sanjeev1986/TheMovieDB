@@ -2,5 +2,5 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/ic_bookmark_border_24px" android:state_checked="false" />
     <item android:drawable="@drawable/ic_bookmark_24px" android:state_checked="true" />
-    <item android:drawable="@drawable/ic_bookmark_border_24px"></item>
+    <item android:drawable="@drawable/ic_bookmark_border_24px" />
 </selector>

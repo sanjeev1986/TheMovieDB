@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.widget.AppCompatEditText
@@ -26,10 +27,12 @@ import com.sample.themoviedb.common.BaseFragment
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.ui.loadImage
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SearchFragment : BaseFragment(), TextWatcher {
 
     @Inject
@@ -138,9 +141,18 @@ class SearchFragment : BaseFragment(), TextWatcher {
 
     private inner class MovieViewHolder(private var view: View) :
         RecyclerView.ViewHolder(view) {
+        private val addToWatchList = view.findViewById<CheckBox>(R.id.addToWatchList)
         private val movieImage = view.findViewById<ImageView>(R.id.movieImage)
 
         fun bind(movie: Movie) {
+
+            addToWatchList.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    viewModel.addToWatchList(movie)
+                } else {
+                    viewModel.removeFromWatchList(movie)
+                }
+            }
             with(movie) {
                 posterPath?.apply { movieImage.loadImage(this) }
             }

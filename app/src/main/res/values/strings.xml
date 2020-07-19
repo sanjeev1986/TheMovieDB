@@ -9,4 +9,5 @@
     <string name="more">More</string>
     <string name="favorites">Favourites</string>
     <string name="nothing_to_watch_yet">Nothing to watch yet</string>
+    <string name="search_moviedb">Search MovieDB</string>
 </resources>

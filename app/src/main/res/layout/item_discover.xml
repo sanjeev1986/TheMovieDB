@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:button="@drawable/toggle_bookmark"
+            android:buttonTint="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="@id/titleTxtView"
             app:layout_constraintEnd_toEndOf="parent" />
 
