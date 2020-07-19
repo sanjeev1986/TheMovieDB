@@ -35,7 +35,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:background="@null"
-                        android:hint="Search MovieDB"
+                        android:hint="@string/search_moviedb"
                         android:imeOptions="actionSearch"
                         android:singleLine="true"
                         app:layout_constraintBottom_toBottomOf="parent"

@@ -8,12 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
@@ -26,10 +28,12 @@ import com.sample.themoviedb.common.BaseFragment
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.ui.loadImage
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SearchFragment : BaseFragment(), TextWatcher {
 
     @Inject
@@ -138,31 +142,30 @@ class SearchFragment : BaseFragment(), TextWatcher {
 
     private inner class MovieViewHolder(private var view: View) :
         RecyclerView.ViewHolder(view) {
+        private val addToWatchList = view.findViewById<CheckBox>(R.id.addToWatchList)
         private val movieImage = view.findViewById<ImageView>(R.id.movieImage)
 
         fun bind(movie: Movie) {
+
+            addToWatchList.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    viewModel.addToWatchList(movie)
+                } else {
+                    viewModel.removeFromWatchList(movie)
+                }
+            }
             with(movie) {
                 posterPath?.apply { movieImage.loadImage(this) }
             }
             view.setOnClickListener {
-                // onClick(movieImage, movie)
+                findNavController().navigate(
+                    SearchFragmentDirections.actionSearchToMovieDetailsFragment(
+                        movie.id
+                    )
+                )
             }
         }
     }
-
-    /* fun onClick(movieImage: ImageView, movie: Movie) {
-         val intent = Intent(this, MovieDetailsActivity::class.java)
-         intent.putExtra(MovieDetailsActivity.EXTRA_ID, movie.id)
-         intent.putExtra(MovieDetailsActivity.EXTRA_IMAGE_RES, movie.backdropPath)
-         intent.putExtra(MovieDetailsActivity.EXTRA_IMAGE_THUMBNAIL, movie.posterPath)
-         intent.putExtra(MovieDetailsActivity.EXTRA_TITLE, movie.title)
-         intent.putExtra(MovieDetailsActivity.EXTRA_OVERVIEW, movie.overview)
-         val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-             this, movieImage, movie.title ?: ""
-         )
-         startActivity(intent, options.toBundle())
-         requireActivity().finish()
-     }*/
 
     override fun afterTextChanged(s: Editable?) {
     }

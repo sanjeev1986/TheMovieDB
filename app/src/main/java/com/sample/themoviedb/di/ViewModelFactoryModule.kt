@@ -14,8 +14,10 @@ import com.sample.themoviedb.platform.NetworkManager
 import com.sample.themoviedb.repositories.GenreRepository
 import com.sample.themoviedb.repositories.MovieDetailsRepository
 import com.sample.themoviedb.search.SearchViewModel
+import com.sample.themoviedb.storage.db.watchlist.WatchListDao
 import com.sample.themoviedb.storage.memory.InMemoryCache
 import com.sample.themoviedb.trending.TrendingViewModel
+import com.sample.themoviedb.watchlist.WatchListViewModel
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
@@ -25,19 +27,27 @@ class ViewModelFactoryModule {
 
     @Provides
     @Named("Discover")
-    fun provideDiscoverViewModelFactory(memoryCache: InMemoryCache, discoverApi: DiscoverApi) =
+    fun provideDiscoverViewModelFactory(
+        memoryCache: InMemoryCache,
+        watchListDao: WatchListDao,
+        discoverApi: DiscoverApi
+    ) =
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return DiscoverViewModel(memoryCache, discoverApi) as T
+                return DiscoverViewModel(memoryCache, watchListDao, discoverApi) as T
             }
         }
 
     @Provides
     @Named("InTheatres")
-    fun provideInTheatresViewModelFactory(memoryCache: InMemoryCache, moviesApi: MovieApi) =
+    fun provideInTheatresViewModelFactory(
+        memoryCache: InMemoryCache,
+        watchListDao: WatchListDao,
+        moviesApi: MovieApi
+    ) =
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return InTheatresViewModel(memoryCache, moviesApi) as T
+                return InTheatresViewModel(memoryCache, watchListDao, moviesApi) as T
             }
         }
 
@@ -45,20 +55,22 @@ class ViewModelFactoryModule {
     @Named("Trending")
     fun provideTrendingViewModelFactory(
         memoryCache: InMemoryCache,
+        watchListDao: WatchListDao,
         trendingApi: TrendingApi
     ) = object : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return TrendingViewModel(memoryCache, trendingApi) as T
+            return TrendingViewModel(memoryCache, watchListDao, trendingApi) as T
         }
     }
 
     @Provides
     @Named("Search")
-    fun provideSearchViewModelFactory(searchApi: SearchApi) = object : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return SearchViewModel(searchApi) as T
+    fun provideSearchViewModelFactory(searchApi: SearchApi, watchListDao: WatchListDao) =
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return SearchViewModel(searchApi, watchListDao) as T
+            }
         }
-    }
 
 
     @Provides
@@ -79,6 +91,15 @@ class ViewModelFactoryModule {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return MovieDetailsViewModel(movieDetailsRepository) as T
+            }
+        }
+
+    @Provides
+    @Named("Watch-List")
+    fun provideWatchListViewModelFactory(watchListDao: WatchListDao) =
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return WatchListViewModel(watchListDao) as T
             }
         }
 }
