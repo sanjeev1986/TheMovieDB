@@ -111,7 +111,7 @@ class TrendingFragment : BaseFragment() {
             view.setOnClickListener {
                 findNavController().navigate(
                     TrendingFragmentDirections.actionHomeTrendingToMovieDetailsFragment(
-                        movie
+                        movie.id
                     )
                 )
             }

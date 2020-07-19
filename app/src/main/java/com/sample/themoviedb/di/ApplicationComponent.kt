@@ -8,13 +8,19 @@ import com.sample.themoviedb.genres.GenresFragment
 import com.sample.themoviedb.intheatres.InTheatresFragment
 import com.sample.themoviedb.search.SearchFragment
 import com.sample.themoviedb.trending.TrendingFragment
+import com.sample.themoviedb.watchlist.WatchListFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
 @Component(
-    modules = [GsonModule::class, HttpModule::class, PlatformModule::class, StorageModule::class, ApiModule::class, ViewModelFactoryModule::class]
+    modules = [GsonModule::class,
+        HttpModule::class,
+        PlatformModule::class,
+        StorageModule::class,
+        ApiModule::class,
+        ViewModelFactoryModule::class]
 )
 interface ApplicationComponent {
     @Component.Builder
@@ -34,4 +40,5 @@ interface ApplicationComponent {
     fun inject(fragment: SearchFragment)
     fun inject(fragment: GenresFragment)
     fun inject(fragment: MovieDetailsFragment)
+    fun inject(fragment: WatchListFragment)
 }

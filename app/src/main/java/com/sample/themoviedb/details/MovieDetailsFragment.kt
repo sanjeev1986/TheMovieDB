@@ -89,7 +89,7 @@ class MovieDetailsFragment : BaseFragment() {
                 }
             }
         })
-        viewModel.fetchMovieDetails(safeArgs.movie.id)
+        viewModel.fetchMovieDetails(safeArgs.movie)
     }
 
     private inner class GenreListAdapter(private val items: List<String>) :

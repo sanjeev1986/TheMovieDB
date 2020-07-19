@@ -9,6 +9,7 @@ import androidx.paging.PagedList
 import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.api.search.SearchApi
 import com.sample.themoviedb.common.ViewModelResult
+import com.sample.themoviedb.storage.db.watchlist.WatchListDao
 import com.sample.themoviedb.utils.MainThreadExecutor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -26,7 +27,7 @@ import kotlinx.coroutines.launch
  * This avoids an api call for every new char entered by the user and conserves data usage
  */
 @ExperimentalCoroutinesApi
-class SearchViewModel(searchApi: SearchApi) : ViewModel() {
+class SearchViewModel(searchApi: SearchApi, private val watchListDao: WatchListDao) : ViewModel() {
     companion object {
         object NoResultsFound : Throwable("No Results Found")
     }

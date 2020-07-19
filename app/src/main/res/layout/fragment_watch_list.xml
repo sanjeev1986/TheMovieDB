@@ -11,10 +11,15 @@
             android:text="@string/nothing_to_watch_yet"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:textStyle="bold"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/watchListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

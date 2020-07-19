@@ -111,7 +111,7 @@ class InTheatresFragment : BaseFragment() {
             view.setOnClickListener {
                 findNavController().navigate(
                     InTheatresFragmentDirections.actionHomeIntheatresToMovieDetailsFragment(
-                        movie
+                        movie.id
                     )
                 )
             }

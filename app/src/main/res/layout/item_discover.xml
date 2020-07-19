@@ -23,18 +23,17 @@
             android:padding="16dp"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/movieImage" />
+            app:layout_constraintBottom_toBottomOf="@id/movieImage"
+            app:layout_constraintEnd_toStartOf="@+id/addToWatchList" />
+
 
     <CheckBox
             android:id="@+id/addToWatchList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:background="@null"
+            android:layout_gravity="center"
             android:button="@drawable/toggle_bookmark"
-            android:text=""
-            android:textOff=""
-            android:textOn=""
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/titleTxtView"
             app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
