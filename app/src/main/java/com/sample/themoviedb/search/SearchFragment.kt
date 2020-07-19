@@ -15,6 +15,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
@@ -157,24 +158,14 @@ class SearchFragment : BaseFragment(), TextWatcher {
                 posterPath?.apply { movieImage.loadImage(this) }
             }
             view.setOnClickListener {
-                // onClick(movieImage, movie)
+                findNavController().navigate(
+                    SearchFragmentDirections.actionSearchToMovieDetailsFragment(
+                        movie.id
+                    )
+                )
             }
         }
     }
-
-    /* fun onClick(movieImage: ImageView, movie: Movie) {
-         val intent = Intent(this, MovieDetailsActivity::class.java)
-         intent.putExtra(MovieDetailsActivity.EXTRA_ID, movie.id)
-         intent.putExtra(MovieDetailsActivity.EXTRA_IMAGE_RES, movie.backdropPath)
-         intent.putExtra(MovieDetailsActivity.EXTRA_IMAGE_THUMBNAIL, movie.posterPath)
-         intent.putExtra(MovieDetailsActivity.EXTRA_TITLE, movie.title)
-         intent.putExtra(MovieDetailsActivity.EXTRA_OVERVIEW, movie.overview)
-         val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-             this, movieImage, movie.title ?: ""
-         )
-         startActivity(intent, options.toBundle())
-         requireActivity().finish()
-     }*/
 
     override fun afterTextChanged(s: Editable?) {
     }
