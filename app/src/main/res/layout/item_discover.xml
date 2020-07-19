@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -9,20 +8,33 @@
     <ImageView
             android:id="@+id/movieImage"
             android:layout_width="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_height="0px"
             android:scaleType="centerInside"
             android:src="@drawable/ic_baseline_photo_24px"
-            app:layout_constraintDimensionRatio="W,1.5:1" />
+            app:layout_constraintDimensionRatio="W,1.5:1"
+            app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
             android:id="@+id/titleTxtView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/gradient_movie_title"
             android:fontFamily="@font/roboto_bold"
-            android:textColor="#FFFFFF"
             android:padding="16dp"
+            android:textColor="#FFFFFF"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/movieImage" />
+            app:layout_constraintBottom_toBottomOf="@id/movieImage"
+            app:layout_constraintEnd_toStartOf="@+id/addToWatchList" />
+
+
+    <CheckBox
+            android:id="@+id/addToWatchList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:button="@drawable/toggle_bookmark"
+            android:buttonTint="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="@id/titleTxtView"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

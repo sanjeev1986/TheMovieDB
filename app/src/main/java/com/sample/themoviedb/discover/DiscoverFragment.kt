@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -69,7 +70,7 @@ class DiscoverFragment : BaseFragment() {
                 when (it) {
                     is ViewModelResult.Success -> {
                         swipeRefreshLayout.isRefreshing = false
-                        movieAdapter.items = it.result
+                        movieAdapter.items = it.result.toMutableList()
                         movieAdapter.notifyDataSetChanged()
                     }
                     is ViewModelResult.Failure -> {
@@ -84,7 +85,7 @@ class DiscoverFragment : BaseFragment() {
 
     private inner class MovieListAdapter : RecyclerView.Adapter<MovieViewHolder>() {
 
-        var items: List<Movie> = mutableListOf<Movie>()
+        var items = mutableListOf<Pair<Movie, Boolean>>()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder =
             MovieViewHolder(
@@ -102,16 +103,23 @@ class DiscoverFragment : BaseFragment() {
         RecyclerView.ViewHolder(view) {
         private val movieImage = view.findViewById<ImageView>(R.id.movieImage)
         private val movieTitle = view.findViewById<TextView>(R.id.titleTxtView)
+        private val addToWatchList = view.findViewById<CheckBox>(R.id.addToWatchList)
 
-        fun bind(movie: Movie) {
-            with(movie) {
-                posterPath?.apply { movieImage.loadImage(this) }
-                movieTitle.text = title
+        fun bind(movieWrapper: Pair<Movie, Boolean>) {
+            movieWrapper.first.posterPath?.apply { movieImage.loadImage(this) }
+            movieTitle.text = movieWrapper.first.title
+            addToWatchList.isChecked = movieWrapper.second
+            addToWatchList.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    viewModel.addToWatchList(movieWrapper.first)
+                } else {
+                    viewModel.removeFromWatchList(movieWrapper.first)
+                }
             }
             view.setOnClickListener {
                 findNavController().navigate(
                     DiscoverFragmentDirections.actionHomeDiscoverToMovieDetailsFragment(
-                        movie
+                        movieWrapper.first.id
                     )
                 )
             }

@@ -74,7 +74,7 @@ class MovieDetailsFragment : BaseFragment() {
                     it.result.posterPath?.run {
                         view.findViewById<ImageView>(R.id.movieImage).loadImage(this)
                         view.findViewById<ImageView>(R.id.movieImage).animate().alpha(1.0f)
-                            .translationX(0.0f).setDuration(400).setStartDelay(400).start()
+                            .translationX(0.0f).setDuration(800).start()
                     }
                     titleTxtView.text = it.result.title
                     titleTxtView.animate().alpha(1.0f).setStartDelay(500).setDuration(800).start()
@@ -89,7 +89,7 @@ class MovieDetailsFragment : BaseFragment() {
                 }
             }
         })
-        viewModel.fetchMovieDetails(safeArgs.movie.id)
+        viewModel.fetchMovieDetails(safeArgs.movie)
     }
 
     private inner class GenreListAdapter(private val items: List<String>) :
