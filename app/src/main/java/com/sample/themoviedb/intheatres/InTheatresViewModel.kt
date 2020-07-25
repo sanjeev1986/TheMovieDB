@@ -3,6 +3,7 @@ package com.sample.themoviedb.intheatres
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.api.movies.MovieApi
@@ -13,12 +14,24 @@ import com.sample.themoviedb.storage.memory.InMemoryCache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class InTheatresViewModel(
     private val inMemoryCache: InMemoryCache,
     private val watchListDao: WatchListDao,
     private val api: MovieApi
 ) : ViewModel() {
+
+    @Suppress("UNCHECKED_CAST")
+    class InTheatresViewModelFactory @Inject constructor(
+        private val inMemoryCache: InMemoryCache,
+        private val watchListDao: WatchListDao,
+        private val api: MovieApi
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return InTheatresViewModel(inMemoryCache, watchListDao, api) as T
+        }
+    }
 
     private val _resultsLiveData = MutableLiveData<ViewModelResult<List<Movie>, Throwable>>()
     val resultsLiveData: LiveData<ViewModelResult<List<Movie>, Throwable>>

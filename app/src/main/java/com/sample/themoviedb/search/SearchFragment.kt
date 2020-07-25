@@ -14,7 +14,6 @@ import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -31,14 +30,12 @@ import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Named
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchFragment : BaseFragment(), TextWatcher {
 
     @Inject
-    @field:Named("Search")
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var viewModelFactory: SearchViewModel.SearchViewModelFactory
 
     private val viewModel by viewModels<SearchViewModel> { viewModelFactory }
 

@@ -85,5 +85,4 @@ open class TheMovieDbApp : Application() {
      * Singleton platform access
      */
     private val platformManager = PlatformManager(this)
-
 }

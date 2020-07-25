@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,8 +21,6 @@ import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.ui.loadImage
 import kotlinx.android.synthetic.main.activity_movie_details.*
 import javax.inject.Inject
-import javax.inject.Named
-
 
 /**
  * Displays Backdrop and Overview of the Image
@@ -34,11 +31,9 @@ class MovieDetailsFragment : BaseFragment() {
     private val safeArgs: MovieDetailsFragmentArgs by navArgs()
 
     @Inject
-    @field:Named("Details")
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var viewModelFactory: MovieDetailsViewModel.MovieDetailsViewModelFactory
 
     private val viewModel by viewModels<MovieDetailsViewModel> { viewModelFactory }
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -57,38 +52,54 @@ class MovieDetailsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         val genreListAdapter = view.findViewById<RecyclerView>(R.id.movieGenreList)
 
-        viewModel.movieDetailsLiveData.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is ViewModelResult.Success -> {
-                    genreListAdapter.adapter =
-                        GenreListAdapter(it.result.genres?.filter { it.id == it.id }
-                            ?.map { it.name }
-                            ?: emptyList())
-                    genreListAdapter.layoutManager =
-                        LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                    movieImage?.run { it.result.backdropPath?.run { backdropImgView.loadImage(this) } }
-                        ?: run {
-                            backdropImgView.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                            backdropImgView.setImageResource(R.drawable.ic_baseline_photo_24px)
+        viewModel.movieDetailsLiveData.observe(
+            viewLifecycleOwner,
+            Observer {
+                when (it) {
+                    is ViewModelResult.Success -> {
+                        genreListAdapter.adapter =
+                            GenreListAdapter(
+                                it.result.genres?.filter { it.id == it.id }
+                                    ?.map { it.name }
+                                    ?: emptyList()
+                            )
+                        genreListAdapter.layoutManager =
+                            LinearLayoutManager(
+                                requireContext(),
+                                LinearLayoutManager.HORIZONTAL,
+                                false
+                            )
+                        movieImage?.run {
+                            it.result.backdropPath?.run {
+                                backdropImgView.loadImage(
+                                    this
+                                )
+                            }
                         }
-                    it.result.posterPath?.run {
-                        view.findViewById<ImageView>(R.id.movieImage).loadImage(this)
-                        view.findViewById<ImageView>(R.id.movieImage).animate().alpha(1.0f)
-                            .translationX(0.0f).setDuration(800).start()
+                            ?: run {
+                                backdropImgView.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                                backdropImgView.setImageResource(R.drawable.ic_baseline_photo_24px)
+                            }
+                        it.result.posterPath?.run {
+                            view.findViewById<ImageView>(R.id.movieImage).loadImage(this)
+                            view.findViewById<ImageView>(R.id.movieImage).animate().alpha(1.0f)
+                                .translationX(0.0f).setDuration(800).start()
+                        }
+                        titleTxtView.text = it.result.title
+                        titleTxtView.animate().alpha(1.0f).setStartDelay(500).setDuration(800)
+                            .start()
+                        overviewTxtView.text = it.result.overview
+                        movie = it.result
+                        view.findViewById<TextView>(R.id.rating).text = "${it.result.voteAverage}"
+                        view.findViewById<TextView>(R.id.ratingCount).text =
+                            "${it.result.voteCount}"
                     }
-                    titleTxtView.text = it.result.title
-                    titleTxtView.animate().alpha(1.0f).setStartDelay(500).setDuration(800).start()
-                    overviewTxtView.text = it.result.overview
-                    movie = it.result
-                    view.findViewById<TextView>(R.id.rating).text = "${it.result.voteAverage}"
-                    view.findViewById<TextView>(R.id.ratingCount).text = "${it.result.voteCount}"
-                }
 
-                is ViewModelResult.Failure -> {
-
+                    is ViewModelResult.Failure -> {
+                    }
                 }
             }
-        })
+        )
         viewModel.fetchMovieDetails(safeArgs.movie)
     }
 

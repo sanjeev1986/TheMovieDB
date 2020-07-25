@@ -27,5 +27,4 @@ class ApiModule {
 
     @Provides
     fun provideTrendingApi(apiManager: ApiManager) = apiManager.trendingApi
-
 }

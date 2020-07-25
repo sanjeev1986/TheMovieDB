@@ -3,6 +3,7 @@ package com.sample.themoviedb.discover
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.sample.themoviedb.api.Movie
 import com.sample.themoviedb.api.discover.DiscoverApi
@@ -13,12 +14,23 @@ import com.sample.themoviedb.storage.memory.InMemoryCache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class DiscoverViewModel(
     private val inMemoryCache: InMemoryCache,
     private val watchListDao: WatchListDao,
     private val discoverApi: DiscoverApi
 ) : ViewModel() {
+
+    class DiscoverViewModelFactory @Inject constructor(
+        private val memoryCache: InMemoryCache,
+        private val watchListDao: WatchListDao,
+        private val discoverApi: DiscoverApi
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return DiscoverViewModel(memoryCache, watchListDao, discoverApi) as T
+        }
+    }
 
     private val _resultsLiveData =
         MutableLiveData<ViewModelResult<List<Pair<Movie, Boolean>>, Throwable>>()

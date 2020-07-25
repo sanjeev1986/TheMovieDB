@@ -3,6 +3,7 @@ package com.sample.themoviedb.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 /**
  * ViewModel uses a debounce time of 1 second to buffer the rapid typing of the user.
@@ -33,6 +35,15 @@ import kotlinx.coroutines.withContext
 class SearchViewModel(searchApi: SearchApi, private val watchListDao: WatchListDao) : ViewModel() {
     companion object {
         object NoResultsFound : Throwable("No Results Found")
+    }
+
+    class SearchViewModelFactory @Inject constructor(
+        private val searchApi: SearchApi,
+        private val watchListDao: WatchListDao
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return SearchViewModel(searchApi, watchListDao) as T
+        }
     }
 
     private val _resultsLiveData =

@@ -7,7 +7,6 @@ import androidx.room.RoomDatabase
 import com.sample.themoviedb.storage.db.watchlist.WatchListDao
 import com.sample.themoviedb.storage.db.watchlist.WatchListItem
 
-
 @Database(entities = [WatchListItem::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     companion object {
@@ -30,6 +29,4 @@ abstract class AppDatabase : RoomDatabase() {
     }
 
     abstract fun watchListDao(): WatchListDao
-
-
 }

@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,13 +23,11 @@ import com.sample.themoviedb.common.BaseFragment
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.ui.loadImage
 import javax.inject.Inject
-import javax.inject.Named
 
 class InTheatresFragment : BaseFragment() {
 
     @Inject
-    @field:Named("InTheatres")
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var viewModelFactory: InTheatresViewModel.InTheatresViewModelFactory
 
     private val viewModel by viewModels<InTheatresViewModel> { viewModelFactory }
 

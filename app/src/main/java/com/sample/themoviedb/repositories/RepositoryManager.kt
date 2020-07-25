@@ -26,5 +26,4 @@ class RepositoryManager(
             apiManager.movieApi
         )
     }
-
 }

@@ -15,5 +15,4 @@ class HttpModule {
     @Provides
     fun provideHttpStack(application: Application, gson: Gson) =
         HttpStack(BuildConfig.BASE_URL, application.cacheDir, gson)
-
 }
