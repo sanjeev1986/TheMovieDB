@@ -13,6 +13,9 @@ interface WatchListDao {
     @Query("SELECT * FROM WatchLists")
     suspend fun getWatchLists(): List<WatchListItem>
 
+    @Query("SELECT * FROM WatchLists WHERE movieId IN (:ids)")
+    suspend fun getWatchLists(ids: IntArray): List<WatchListItem>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWatchList(watchListItem: WatchListItem)
 
