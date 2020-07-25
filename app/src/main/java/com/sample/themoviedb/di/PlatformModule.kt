@@ -17,5 +17,4 @@ class PlatformModule {
     @Singleton
     @Provides
     fun provideNetworkManager(platformManager: PlatformManager) = platformManager.networkManager
-
 }

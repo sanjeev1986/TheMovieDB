@@ -32,5 +32,4 @@ class StorageModule {
     @Singleton
     @Provides
     fun provideWatchListEntity(appDatabase: AppDatabase) = appDatabase.watchListDao()
-
 }

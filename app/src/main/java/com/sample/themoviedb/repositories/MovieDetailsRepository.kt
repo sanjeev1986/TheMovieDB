@@ -18,8 +18,10 @@ class MovieDetailsRepository @Inject constructor(
 ) {
     suspend fun fetchMovieDetails(movieId: Int): MovieDetailsResponse {
         return inMemoryCache[MovieDetailsRepository::class.simpleName!! + movieId]
-            ?: when (val nwkStatus =
-                networkManager.getNetworkStatus()) {
+            ?: when (
+                val nwkStatus =
+                    networkManager.getNetworkStatus()
+                ) {
                 is Disconnected -> {
                     throw nwkStatus.e
                 }

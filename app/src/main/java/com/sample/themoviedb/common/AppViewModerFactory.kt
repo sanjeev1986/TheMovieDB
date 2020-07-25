@@ -28,5 +28,4 @@ class AppViewModerFactory(
             testInstanceMap[cls] = mock
         }
     }
-
 }

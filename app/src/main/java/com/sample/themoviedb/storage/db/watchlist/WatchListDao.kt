@@ -24,5 +24,4 @@ interface WatchListDao {
 
     @Delete
     suspend fun deleteWatchList(watchListItem: WatchListItem): Int
-
 }

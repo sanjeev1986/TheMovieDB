@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -24,7 +23,6 @@ import com.sample.themoviedb.common.BaseFragment
 import com.sample.themoviedb.common.ViewModelResult
 import com.sample.themoviedb.utils.ui.GridItemDecoration
 import javax.inject.Inject
-import javax.inject.Named
 
 class GenresFragment : BaseFragment() {
 
@@ -33,8 +31,7 @@ class GenresFragment : BaseFragment() {
     private lateinit var menu: Menu
 
     @Inject
-    @field:Named("Genres")
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var viewModelFactory: GenresViewModel.GenresViewModelFactory
 
     private val viewModel by viewModels<GenresViewModel> { viewModelFactory }
 
@@ -42,7 +39,6 @@ class GenresFragment : BaseFragment() {
         super.onAttach(context)
         TheMovieDbApp.getInstance(requireContext()).applicationComponent.inject(this)
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -3,6 +3,7 @@ package com.sample.themoviedb.genres
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.sample.themoviedb.api.genres.Genre
 import com.sample.themoviedb.common.ViewModelResult
@@ -13,11 +14,22 @@ import com.sample.themoviedb.repositories.GenreRepository
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
+@Suppress("UNCHECKED_CAST")
 class GenresViewModel(
     private val genreRepository: GenreRepository,
     private val networkManager: NetworkManager
 ) : ViewModel() {
+
+    class GenresViewModelFactory @Inject constructor(
+        private val genreRepository: GenreRepository,
+        private val networkManager: NetworkManager
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return GenresViewModel(genreRepository, networkManager) as T
+        }
+    }
 
     private val _genresLiveData = MutableLiveData<ViewModelResult<List<Genre>, Throwable>>()
     val genresLiveData: LiveData<ViewModelResult<List<Genre>, Throwable>>

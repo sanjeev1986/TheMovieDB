@@ -15,12 +15,14 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(
-    modules = [GsonModule::class,
+    modules = [
+        GsonModule::class,
         HttpModule::class,
         PlatformModule::class,
         StorageModule::class,
         ApiModule::class,
-        ViewModelFactoryModule::class]
+        ViewModelFactoryModule::class
+    ]
 )
 interface ApplicationComponent {
     @Component.Builder
